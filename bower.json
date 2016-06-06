@@ -1,0 +1,6 @@
+{
+  "name": "symphony",
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
