@@ -20,7 +20,22 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('AppBundle::pages/main.html.twig');
+        $items = [
+            [
+                'id' => 1,
+                'title' => 'Title',
+                'text' => 'text'
+            ],
+            [
+                'id' => 2,
+                'title' => 'Title2',
+                'text' => 'text2'
+            ],
+        ];
+
+        return $this->render('AppBundle::pages/main.html.twig', [
+            'items' => $items
+        ]);
     }
     /**
      * @Route("/admin")
