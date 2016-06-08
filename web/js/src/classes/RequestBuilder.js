@@ -1,12 +1,12 @@
 ;(function() {
     'use strict';
 
-    function RequestFactory() {
+    function RequestBuilder() {
 
     }
 
     RequestFactory.prototype.create = function () {
-        
+
     };
 
 

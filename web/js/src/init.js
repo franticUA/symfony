@@ -4,16 +4,12 @@
     window.app = new Application(function() {
         // service config
         var Request = app.module('classes.Request'),
-            User = app.module('models.User');
+            userConfig = app.module('configs.User');
 
         app
             .service('config', function() {
-
-
                 return {
-                    getUserId: function() {
-
-                    }
+                    user: userConfig
                 }
             })
             .service('request', function() {
@@ -22,7 +18,7 @@
                 request.setDefaults({
 
                 });
-                
+
                 return request;
             });
     });
