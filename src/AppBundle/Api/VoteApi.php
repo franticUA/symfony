@@ -27,6 +27,7 @@ abstract class VoteApi extends ApiController
 
     function votedCheck($userId, EntityManager $em)
     {
+        $back_val = 0;
         $this->userId = $userId;
         if ($like = $em->getRepository($this->repositoryLikes)
             ->findOneBy([$this->entity.'Id' => $this->id, 'userId' => $this->userId])
@@ -37,6 +38,7 @@ abstract class VoteApi extends ApiController
                 throw new Exception('ALREADY_VOTED');
             } else {
                 //либо надо знак поменять, либо удалить
+                $back_val = $like->getVal();
                 $em->remove($like);
                 $em->flush();
             }
@@ -51,6 +53,11 @@ abstract class VoteApi extends ApiController
             ->setParameter('id', $this->id)
             ->getQuery()
             ->getOneOrNullResult();
+        if ($back_val) {
+            $this->entity->setRating($this->entity->getRating() - $back_val);
+            $em->persist($this->entity);
+            $em->flush();
+        }
     }
 
     abstract function liking(EntityManager $em);

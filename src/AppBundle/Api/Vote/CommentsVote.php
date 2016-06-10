@@ -20,6 +20,8 @@ class CommentsVote extends VoteApi
     public function liking(EntityManager $em)
     {
         if ($this->type) {
+            $this->entity->setRating($this->entity->getRating() + 1*$this->type);
+
             $entityLike = new CommentsLikes();
             $entityLike->setUserId($this->userId);
             $entityLike->setCommentId($this->id);

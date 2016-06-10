@@ -20,6 +20,8 @@ class ArticleVote extends VoteApi
     public function liking(EntityManager $em)
     {
         if ($this->type) {
+            $this->entity->setRating($this->entity->getRating() + 1*$this->type);
+            
             $articleLike = new ArticleLikes();
             $articleLike->setUserId($this->userId);
             $articleLike->setArticleId($this->id);
