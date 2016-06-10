@@ -65,11 +65,12 @@ class BlogController extends Controller
             ->add('add', SubmitType::class, array('label' => 'Add', 'attr' => array('class' => 'btn')))
             ->getForm();
 
-        $form->handleRequest($request);
         $userId = 0;
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             $userId = $this->getUser()->getId();
         }
+
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
             $comment->setUser($this->getUser());
