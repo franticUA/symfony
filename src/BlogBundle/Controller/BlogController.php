@@ -25,8 +25,12 @@ class BlogController extends Controller
 
         $limit = 10;
 
+        $userId = 0;
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')){
+            $userId = $this->getUser()->getId();
+        }
+
         $offset = ($page > 1) ? ($page - 1) * $limit : 0;
-        $userId = $this->getUser()->getId();
 
         $query = $em->createQueryBuilder()
             ->select('b')
@@ -62,8 +66,12 @@ class BlogController extends Controller
             ->getForm();
 
         $form->handleRequest($request);
-        $userId = $this->getUser()->getId();
-        if ($form->isSubmitted() && $form->isValid()){
+        $userId = 0;
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            $userId = $this->getUser()->getId();
+        }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
             $comment->setUser($this->getUser());
             $comment->setUserId($userId);
             $comment->setArticleId($id);

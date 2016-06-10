@@ -1,9 +1,9 @@
 <?php
 
-namespace BlogBundle\Api\Vote;
+namespace AppBundle\Api\Vote;
 
 
-use BlogBundle\Api\VoteApi;
+use AppBundle\Api\VoteApi;
 use Doctrine\ORM\EntityManager;
 use BlogBundle\Entity\CommentsLikes;
 

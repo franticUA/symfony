@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: user
- * Date: 10.06.2016
- * Time: 11:45
- */
 
-namespace BlogBundle\Api;
+namespace AppBundle\Api;
 
 
-use BlogBundle\Controller\ApiController;
+use AppBundle\Controller\ApiController;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Bridge\Doctrine;
