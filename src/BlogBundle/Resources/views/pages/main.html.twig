@@ -20,9 +20,9 @@
                             {% set dislike = 0 %}
                         {% endif %}
                     {% endfor %}
-                    <a href="{{ path('BlogBundle_like', {'id': article.id, 'type': like}) }}">{% if like == 0 %}UN{% endif %}LIKE</a> |
+                    <a href="{{ path('article_like', {'id': article.id, 'type': like}) }}">{% if like == 0 %}UN{% endif %}LIKE</a> |
                     {{ article.rating }} |
-                    <a href="{{ path('BlogBundle_like', {'id': article.id, 'type': dislike}) }}" >{% if dislike == 0 %}UN{% endif %}DISLIKE</a>
+                    <a href="{{ path('article_like', {'id': article.id, 'type': dislike}) }}" >{% if dislike == 0 %}UN{% endif %}DISLIKE</a>
 
                 </div>
                 <a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">комментарии</a>

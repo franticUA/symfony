@@ -1,13 +1,13 @@
 <?php
 
-namespace BlogBundle\Controller;
+namespace AppBundle\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use BlogBundle\Api\VoteApi;
-use BlogBundle\Api\Vote\CommentsVote;
-use BlogBundle\Api\Vote\ArticleVote;
+use AppBundle\Api\VoteApi;
+use AppBundle\Api\Vote\CommentsVote;
+use AppBundle\Api\Vote\ArticleVote;
 
 class ApiController extends Controller
 {
