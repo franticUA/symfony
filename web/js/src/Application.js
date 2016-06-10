@@ -6,6 +6,8 @@
     function Application(initCallback) {
         this._modules = {};
         $(initCallback || $.noop);
+
+        this.serviceManager = new Bottle();
     }
 
     function _spliteNamespace(namespace) {
@@ -38,8 +40,26 @@
         });
     }
 
+    Application.prototype.createModule = function(namespace) {
+        var Module = this.module(namespace);
+
+        var injects = (Module.$inject | [])
+            .map(function(serviceName) {
+                return this.serviceManager.pop(serviceName)
+            }, this);
+
+        var arguments = Array.prototype.slice
+            .call(arguments, 1)
+            .join(injects);
+
+        Module = Module.bind.apply(Module, arguments);
+
+        return new Module();
+    };
+
     Application.prototype.service = function(serviceName) {
-        return this;        
+        this.serviceManager.call(this.serviceManager, arguments);
+        return this;
     };
 
 })(window);

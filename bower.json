@@ -2,6 +2,7 @@
   "name": "symphony",
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "rivets": "^0.9.0"
+    "rivets": "^0.9.0",
+    "bottlejs": "^1.3.0"
   }
 }

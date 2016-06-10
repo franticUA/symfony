@@ -2,17 +2,15 @@
 {% block content %}
     <a href="{{ path('BlogBundle_new') }}">Добавить</a>
     <div class="articles">
-    {% if articles|length > 0 %}
         {% for article in articles %}
             <article>
                 <h3><a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">{{ article.title }}</a></h3>
                 <div class="article-content">{{ article.content|raw }}</div>
                 <a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">комментарии</a>
             </article>
+        {% else %}
+            <p>There are no blog entries</p>
         {% endfor %}
-    {% else %}
-        <p>There are no blog entries</p>
-    {% endif %}
     </div>
     {% if paginator.pages > 1 %}
     <nav>
