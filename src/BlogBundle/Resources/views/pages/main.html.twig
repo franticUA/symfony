@@ -4,8 +4,26 @@
     <div class="articles">
         {% for article in articles %}
             <article>
-                <h3><a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">{{ article.title }}</a></h3>
+                <h3>{{ article.title }}</h3>
+                <div>{{ article.user.username }}, {{ article.created|date('l, F j, Y') }}</div>
                 <div class="article-content">{{ article.content|raw }}</div>
+                <div>
+
+                    {% set like = 1 %}
+                    {% set dislike = -1 %}
+                    {% for l in article.likes %}
+                        {% if l.val > 0 %}
+                            {% set like = 0 %}
+                        {% endif %}
+                        {% if l.val < 0 %}
+                            {% set dislike = 0 %}
+                        {% endif %}
+                    {% endfor %}
+                    <a href="{{ path('BlogBundle_like', {'id': article.id, 'type': like}) }}">{% if like == 0 %}UN{% endif %}LIKE</a> |
+                    {{ article.rating }} |
+                    <a href="{{ path('BlogBundle_like', {'id': article.id, 'type': dislike}) }}" >{% if dislike == 0 %}UN{% endif %}DISLIKE</a>
+
+                </div>
                 <a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">комментарии</a>
             </article>
         {% else %}

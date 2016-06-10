@@ -16,17 +16,19 @@ BlogBundle_show:
         id:  \d+
 
 BlogBundle_like:
-    path:      /blog/article/{id}/like
-    defaults:  { _controller: BlogBundle:Api:article, type: 1}
+    path:      /api/article/{id}/like/{type}
+    defaults:  { _controller: BlogBundle:Api:article}
     requirements:
         id:  \d+
+        type: (0|1|-1)
 
-BlogBundle_dislike:
-    path:      /blog/article/{id}/dislike
-    defaults:  { _controller: BlogBundle:Api:article, type: -1}
+BlogBundle_comment_like:
+    path:      /api/comment/{id}/like/{type}
+    defaults:  { _controller: BlogBundle:Api:comment}
     requirements:
         id:  \d+
+        type: (0|1|-1)
 
 BlogBundle_new:
-    path:      /blog/new/
+    path:      /blog/new
     defaults:  { _controller: BlogBundle:Blog:new }

@@ -2,8 +2,10 @@
 
 namespace BlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use UserBundle\Entity\User;
 
 /**
  * Comments
@@ -15,6 +17,7 @@ class Comments
 {
     public function __construct()
     {
+        $this->likes = new ArrayCollection();
         $this->setCreated(new \DateTime());
         $this->setRating(0);
     }
@@ -69,6 +72,17 @@ class Comments
      * @Assert\NotBlank()
      */
     private $rating;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\CommentsLikes", mappedBy="comment")
+     */
+    private $likes;
 
     /**
      * Get id
@@ -222,6 +236,54 @@ class Comments
     public function getRating()
     {
         return $this->rating;
+    }
+
+    /**
+     * Get user
+     *
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set user
+     *
+     * @param UserBundle\Entity\User
+     *
+     * @return Article
+     */
+    public function setUser($user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get likes
+     *
+     * @return ArrayCollection
+     */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+
+    /**
+     * Set likes
+     *
+     * @param ArrayCollection
+     *
+     * @return Article
+     */
+    public function setLikes($likes = null)
+    {
+        $this->likes = $likes;
+
+        return $this;
     }
 }
 

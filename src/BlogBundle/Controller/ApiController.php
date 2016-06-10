@@ -4,39 +4,45 @@ namespace BlogBundle\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use BlogBundle\Entity\ArticleLikes;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use BlogBundle\Api\VoteApi;
+use BlogBundle\Api\Vote\CommentsVote;
+use BlogBundle\Api\Vote\ArticleVote;
 
 class ApiController extends Controller
 {
+    const OK_CODE = 200;
+    const ERR_CODE = 404;
+
+    public function voteAction(VoteApi $vote)
+    {
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')){
+            return JsonResponse::create([ 'message' => 'ACCESS_DENIED' ], self::ERR_CODE);
+        }
+        $userId = $this->getUser()->getId();
+
+        $code = self::OK_CODE;
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $vote->votedCheck($userId, $em);
+            $message = $vote->liking($em);
+        }catch (\Exception $e){
+            $message = $e->getMessage();
+            $code = self::ERR_CODE;
+        }
+        return JsonResponse::create([ 'message' => $message ], $code);
+
+    }
+    
+    public function commentAction($id, $type = 1)
+    {
+        $vote = new CommentsVote($id, $type);
+        return $this->voteAction($vote);
+    }
+    
     public function articleAction($id, $type = 1)
     {
-        $message = '';
-        $code = 200;
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-            $code = 400;
-            $message = 'ACCESS_DENIED';
-        }elseif ($id){
-            $em = $this->getDoctrine()->getManager();
-
-            $user_id = $this->getUser()->getId();
-
-            if($like = $em->getRepository('BlogBundle:ArticleLikes')
-                ->findOneBy(['articleId' => $id, 'userId' => $user_id])
-            ){
-                $message = 'update';
-                $like->setVal(1*$type);
-            }else{
-                $articleLike = new ArticleLikes();
-                $articleLike->setUserId($user_id);
-                $articleLike->setArticleId($id);
-                $articleLike->setVal(1*$type);
-                $em->persist($articleLike);
-                $message = 'add';
-            }
-            $em->flush();
-        }
-
-        return JsonResponse::create([ 'message' => $message ], $code);
+        $vote = new ArticleVote($id, $type);
+        return $this->voteAction($vote);
     }
 }

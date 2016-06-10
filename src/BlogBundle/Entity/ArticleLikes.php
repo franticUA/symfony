@@ -42,6 +42,11 @@ class ArticleLikes
      */
     private $val;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Article", inversedBy="likes")
+     * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
+     */
+    private $article;
 
     /**
      * Get id
@@ -123,6 +128,30 @@ class ArticleLikes
     public function getVal()
     {
         return $this->val;
+    }
+
+    /**
+     * Get article
+     *
+     * @return Article
+     */
+    public function getArticle()
+    {
+        return $this->article;
+    }
+
+    /**
+     * Set article
+     *
+     * @param BlogBundle\Entity\Article
+     *
+     * @return ArticleLikes
+     */
+    public function setArticle($article = null)
+    {
+        $this->article = $article;
+
+        return $this;
     }
 }
 
