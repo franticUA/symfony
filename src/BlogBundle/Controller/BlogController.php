@@ -4,7 +4,9 @@ namespace BlogBundle\Controller;
 
 
 use BlogBundle\Entity\Article;
+use BlogBundle\Entity\ArticleLikes;
 use BlogBundle\Entity\Comments;
+use BlogBundle\Entity\CommentsLikes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -23,12 +25,15 @@ class BlogController extends Controller
 
         $limit = 10;
 
-        $offset = ($page - 1) * $limit;
-        if($offset < 0) $offset = 0;
+        $offset = ($page > 1) ? ($page - 1) * $limit : 0;
+        $userId = $this->getUser()->getId();
 
         $query = $em->createQueryBuilder()
             ->select('b')
+            ->addSelect('l')
             ->from('BlogBundle:Article',  'b')
+            ->leftJoin('b.likes', 'l', 'WITH', 'b.id=l.articleId AND l.userId=:userId')
+            ->setParameter('userId', $userId)
             ->addOrderBy('b.id', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($limit);
@@ -41,6 +46,7 @@ class BlogController extends Controller
         $paginator = ['page' => $page, 'pages' => $pages, 'start' => 1, 'end' => $pages];
         $paginator['start'] = ($page > 5) ? $page - 3 : 1;
         $paginator['end'] = ($page + 5 < $pages) ? $page + 3 : $pages;
+
         return $this->render('BlogBundle::pages/main.html.twig', array(
             'articles' => $articles,
             'paginator' => $paginator
@@ -56,28 +62,29 @@ class BlogController extends Controller
             ->getForm();
 
         $form->handleRequest($request);
+        $userId = $this->getUser()->getId();
         if ($form->isSubmitted() && $form->isValid()){
-            $user_id = $this->getUser()->getId();
-            $comment->setUserId($user_id);
+            $comment->setUser($this->getUser());
+            $comment->setUserId($userId);
             $comment->setArticleId($id);
             $comment->setParentId(0);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();
+
             return $this->redirectToRoute('BlogBundle_show', ['id' => $id]);
         }
 
         $article = $this->getDoctrine()
             ->getRepository('BlogBundle:Article')
-            ->find($id);
-
+            ->findOneWithUserLike($id, $userId);
 
         $repository = $this->getDoctrine()
             ->getRepository('BlogBundle:Comments');
 
 
-        $comments = $repository->findBy(['articleId' => $id]);
+        $comments = $repository->findWithUserLike($id, $userId);
 
         return $this->render('BlogBundle::pages/show.html.twig', array(
             'article' => $article,
@@ -101,12 +108,15 @@ class BlogController extends Controller
             ->getForm();
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()){
             $article->setUserId($user_id);
+            $article->setUser($this->getUser());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
+
             return $this->redirectToRoute('BlogBundle_show', ['id' => $article->getId()]);
         }
 

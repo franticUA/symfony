@@ -10,4 +10,17 @@ namespace BlogBundle\Repository;
  */
 class CommentsRepository extends \Doctrine\ORM\EntityRepository
 {
+    function findWithUserLike($id, $userId)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->addSelect('l')
+            ->where('c.articleId=:id')
+            ->leftJoin('c.likes', 'l', 'WITH', 'l.userId=:userId')
+            ->setParameters(['id'=>$id, 'userId' => $userId]);
+
+        $res = $qb->getQuery()
+            ->getResult();
+
+        return $res;
+    }
 }

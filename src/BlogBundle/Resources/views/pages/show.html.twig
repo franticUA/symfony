@@ -3,26 +3,54 @@
 
     <h1>{{ article.title }}</h1>
     <article>
-        {{ article.content|raw }}
+        <div class="article-content">{{ article.content|raw }}</div>
+        <div>{{ article.user.username }}, {{ article.created|date('l, F j, Y') }}</div>
     </article>
-    <a href="{{ path('BlogBundle_like', {'id': article.id}) }}">LIKE</a> |
-    <a href="{{ path('BlogBundle_dislike', {'id': article.id}) }}" >DISLIKE</a>
 
-    {% if comments|length > 0 %}
-        <h3>Comments</h3>
-        {% for comment in comments %}
-            <div class="comment">
-                <div class="comment-author">
-                    {{ comment.userId }} |
-                    {{ comment.created|date('l, F j, Y') }}
-                </div>
-                <div class="comment-content">
-                    {{ comment.content }}
-                </div>
-            </div>
-        {% endfor %}
-    {% endif %}
+    {% set like = 1 %}
+    {% set dislike = -1 %}
+    {% for l in article.likes %}
+        {% if l.val > 0 %}
+            {% set like = 0 %}
+        {% endif %}
+        {% if l.val < 0 %}
+            {% set dislike = 0 %}
+        {% endif %}
+    {% endfor %}
+    <a href="{{ path('BlogBundle_like', {'id': article.id, 'type': like}) }}">{% if like == 0 %}UN{% endif %}LIKE</a> |
+    {{ article.rating }} |
+    <a href="{{ path('BlogBundle_like', {'id': article.id, 'type': dislike}) }}" >{% if dislike == 0 %}UN{% endif %}DISLIKE</a>
+
     <div class="comments">
+        <h3>Comments</h3>
+        {% if comments|length > 0 %}
+            {% for comment in comments %}
+                <div class="comment">
+                    <div class="comment-author">
+                        {{ comment.user.username }} |
+                        {{ comment.created|date('l, F j, Y') }}
+                    </div>
+                    <div class="comment-content">
+                        {{ comment.content }}
+                    </div>
+
+                    {% set like = 1 %}
+                    {% set dislike = -1 %}
+                    {% for l in comment.likes %}
+                        {% if l.val > 0 %}
+                            {% set like = 0 %}
+                        {% endif %}
+                        {% if l.val < 0 %}
+                            {% set dislike = 0 %}
+                        {% endif %}
+                    {% endfor %}
+                    <a href="{{ path('BlogBundle_comment_like', {'id': comment.id, 'type': like}) }}">{% if like == 0 %}UN{% endif %}LIKE</a> |
+                    {{ comment.rating }} |
+                    <a href="{{ path('BlogBundle_comment_like', {'id': comment.id, 'type': dislike}) }}" >{% if dislike == 0 %}UN{% endif %}DISLIKE</a>
+
+                </div>
+            {% endfor %}
+        {% endif %}
 
         <h3>Add Comment</h3>
         {{ form_start(form) }}

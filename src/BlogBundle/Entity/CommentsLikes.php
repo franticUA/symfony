@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CommentsLikes
 {
+    function __construct()
+    {
+    }
+
     /**
      * @var int
      *
@@ -42,6 +46,11 @@ class CommentsLikes
      */
     private $val;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Comments", inversedBy="likes")
+     * @ORM\JoinColumn(name="comment_id", referencedColumnName="id")
+     */
+    private $comment;
 
     /**
      * Get id
@@ -123,6 +132,30 @@ class CommentsLikes
     public function getVal()
     {
         return $this->val;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return Comments
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Set article
+     *
+     * @param BlogBundle\Entity\Comments
+     *
+     * @return CommentsLikes
+     */
+    public function setComment($comment = null)
+    {
+        $this->comment = $comment;
+
+        return $this;
     }
 }
 
