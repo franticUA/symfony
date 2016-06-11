@@ -52,15 +52,19 @@
             .concat(injects);
 
         args.unshift(null);
-        
+
         Module = Module.bind.apply(Module, args);
 
         return (new Module());
     };
 
-    Application.prototype.service = function() {
-        this.serviceManager.service.apply(this.serviceManager, arguments);
-        return this;
+    Application.prototype.service = function(serviceName) {
+        if (arguments.length > 1) {
+            this.serviceManager.service.apply(this.serviceManager, arguments);
+            return this;
+        } else {
+            return this.serviceManager.container[serviceName];
+        }
     };
 
     Application.prototype.factory = function() {
