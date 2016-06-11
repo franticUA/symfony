@@ -10,24 +10,24 @@
                 <div class="article-content">{{ article.content|raw }}</div>
                 <div>
 
-                    {% set like = 1 %}
-                    {% set dislike = -1 %}
+                    {% set like = 'like' %}
+                    {% set dislike = 'dislike' %}
 
                     {% for l in article.likes %}
                         {% if l.val > 0 %}
-                            {% set like = 0 %}
+                            {% set like = 'unlike' %}
                         {% endif %}
                         {% if l.val < 0 %}
-                            {% set dislike = 0 %}
+                            {% set dislike = 'unlike' %}
                         {% endif %}
                     {% endfor %}
 
-                    <a href="{{ path('article_like', {'id': article.id, 'type': like}) }}"
-                        data-ajax>
+                    <a href="{{ path('API_article', {'id': article.id}) }}"
+                        data-ajax="action={{ like }}">
                         {% if like == 0 %}UN{% endif %}LIKE
                     </a> |  {{ article.rating }} |
-                    <a href="{{ path('article_like', {'id': article.id, 'type': dislike}) }}"
-                        data-ajax>
+                    <a href="{{ path('API_article', {'id': article.id}) }}"
+                        data-ajax ="action={{ dislike }}">
                         {% if dislike == 0 %}UN{% endif %}DISLIKE
                     </a>
                 </div>
