@@ -3,18 +3,18 @@
 namespace AppBundle\Api\Vote;
 
 
-use AppBundle\Api\BlogApi;
+use AppBundle\Api\VoteApi;
 use Doctrine\ORM\EntityManager;
 use BlogBundle\Entity\CommentsLikes;
 
-class CommentsVote extends BlogApi
+class CommentsVote extends VoteApi
 {
-    function __construct($id)
+    function __construct($id, $type)
     {
         $this->repositoryLikes = 'BlogBundle:CommentsLikes';
         $this->repository = 'BlogBundle:Comments';
         $this->entity = 'comment';
-        parent::__construct($id);
+        parent::__construct($id, $type);
     }
 
     public function liking(EntityManager $em)

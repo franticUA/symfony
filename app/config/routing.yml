@@ -15,20 +15,20 @@ BlogBundle_show:
     requirements:
         id:  \d+
 
+article_like:
+    path:      /api/article/{id}/like/{type}
+    defaults:  { _controller: AppBundle:Api:article}
+    requirements:
+        id:  \d+
+        type: (0|1|-1)
+
+comment_like:
+    path:      /api/comment/{id}/like/{type}
+    defaults:  { _controller: AppBundle:Api:comment}
+    requirements:
+        id:  \d+
+        type: (0|1|-1)
+
 BlogBundle_new:
     path:      /blog/new
     defaults:  { _controller: BlogBundle:Blog:new }
-
-API_article:
-    path:      /api/article/{id}
-    defaults:  { _controller: AppBundle:Api/BlogApi:article}
-    requirements:
-        id:  \d+
-        type: (0|1|-1)
-
-API_comment:
-    path:      /api/comment/{id}
-    defaults:  { _controller: AppBundle:Api/BlogApi:comment}
-    requirements:
-        id:  \d+
-        type: (0|1|-1)
