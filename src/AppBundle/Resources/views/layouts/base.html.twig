@@ -5,6 +5,8 @@
         <title></title>
         {% block css %}
             <link rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.min.css" />
+            <link rel="stylesheet" href="/vendor/alertify/themes/alertify.core.css" />
+            <link rel="stylesheet" href="/vendor/alertify/themes/alertify.bootstrap.css" />
         {% endblock %}
     </head>
     <body>
@@ -19,13 +21,21 @@
             </script>
 
             <script src="/vendor/jquery/dist/jquery.min.js"></script>
+            <script src="/vendor/bottlejs/dist/bottle.min.js"></script>
             <script src="/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
             <script src="/vendor/rivets/dist/rivets.bundled.min.js"></script>
+            <script src="/vendor/alertify/alertify.min.js"></script>
+
+            <script src="/js/src/utils.js"></script>
 
             <script src="/js/src/Application.js"></script>
             <script src="/js/src/init.js"></script>
 
             <script src="/js/src/classes/Request.js"></script>
+            <script src="/js/src/classes/Messanger.js"></script>
+            <script src="/js/src/widgets/Article.js"></script>
+            <script src="/js/src/repositories/Article.js"></script>
+            <script src="/js/src/classes/RepositoriesFactory.js"></script>
 
         {% endblock %}
     </body>

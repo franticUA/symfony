@@ -1,7 +1,7 @@
 ;(function(app) {
     'use strict';
 
-    app.module('classes.RepositoriesFactory');
+    app.module('classes.RepositoriesFactory', RepositoriesFactory);
 
     RepositoriesFactory.$inject = ['request'];
 

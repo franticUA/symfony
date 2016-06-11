@@ -2,25 +2,27 @@
     'use strict';
 
     window.app = new Application(function() {
-        // service config
-        var Request = app.module('classes.Request'),
-            userConfig = app.module('configs.User');
+        var Request             = app.module('classes.Request'),
+            Messanger           = app.module('classes.Messanger'),
+            RepositoriesFactory = app.module('classes.RepositoriesFactory');
+
+        // console.log(Request);
+        // console.log(Messanger);
+        // console.log(RepositoriesFactory);
 
         app
-            .service('config', function() {
-                return {
-                    user: userConfig
-                }
-            })
-            .service('request', function() {
-                var request = new Request();
+            .service('messanger', Messanger)
+            .service('request', Request)
+            .service('repositoryFactory', RepositoriesFactory, 'request');
 
-                request.setDefaults({
-
-                });
-
-                return request;
-            });
+        $('[data-module]').each(function() {
+            var $element = $(this);
+            app.createModule(
+                $element.data('module'),
+                $element,
+                $element.data()
+            );
+        });
     });
 
 })();

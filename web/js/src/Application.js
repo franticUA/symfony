@@ -42,23 +42,29 @@
 
     Application.prototype.createModule = function(namespace) {
         var Module = this.module(namespace);
-
-        var injects = (Module.$inject | [])
+        var injects = (Module.$inject || [])
             .map(function(serviceName) {
-                return this.serviceManager.pop(serviceName)
+                return this.serviceManager.container[serviceName]
             }, this);
 
-        var arguments = Array.prototype.slice
+        var args = Array.prototype.slice
             .call(arguments, 1)
-            .join(injects);
+            .concat(injects);
 
-        Module = Module.bind.apply(Module, arguments);
+        args.unshift(null);
+        
+        Module = Module.bind.apply(Module, args);
 
-        return new Module();
+        return (new Module());
     };
 
-    Application.prototype.service = function(serviceName) {
-        this.serviceManager.call(this.serviceManager, arguments);
+    Application.prototype.service = function() {
+        this.serviceManager.service.apply(this.serviceManager, arguments);
+        return this;
+    };
+
+    Application.prototype.factory = function() {
+        this.serviceManager.factory.apply(this.serviceManager, arguments);
         return this;
     };
 

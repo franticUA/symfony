@@ -1,15 +1,19 @@
-;(function() {
+;(function(app) {
     'use strict';
+
+    app.module('repositories.Article', Article);
+
+    Article.$inject = ['request'];
 
     function Article(request) {
         this.request = request;
     }
 
-    Artice.prototype.like = function(id) {
+    Article.prototype.like = function(id) {
         return this.request.make({
-            method: 'POST',
-            url: format('/blog/article/{id}/like', {id: id})
+            method: 'GET',
+            url: utils.format('/api/article/{$id}/like/1', {id: id})
         });
     };
 
-})();
+})(window.app || {});

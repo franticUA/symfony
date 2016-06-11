@@ -9,16 +9,13 @@
         var options = options || {};
 
         var vm = this;
-        vm.request = requestBuilder
-            .setLoader(false)
-            .build();
 
         vm.repository = repositoryFactory.get('Article');
         vm.item = {
             id: options.id || null,
             rating: options.rating || 0,
             isLiked: options.isLiked || false,
-            isFavorite:  options.isFavorite || false
+            isFavorite:  options.isFavorite || false,
             comments: ''
         }
 
@@ -33,15 +30,9 @@
         }
 
         function like() {
-            // vm.request.make(function() {
-            //     return vm.repository.like(item.id);
-            // }).then(function(newRating) {
-            //     vm.item.rating = newRating;
-            // });
-
-            vm.repository.like(item.id)
+            vm.repository.like(vm.item.id)
                 .then(function(newRating) {
-                    item.rating = newRating;
+                    vm.item.rating = newRating;
                 });
         }
 
