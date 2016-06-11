@@ -285,5 +285,32 @@ class Comments
 
         return $this;
     }
+
+    /**
+     * Get comment
+     *
+     * @return array
+     */
+    public function getArray()
+    {
+        $user = [
+            'username' => $this->getUser()->getUsername(),
+            'lastLogin' => $this->getUser()->getLastLogin()->format('Y-m-d\TH:i:s'),
+        ];
+
+        $data = [
+            'content' => $this->getContent(),
+            'userId' => $this->getUserId(),
+            'user' => $user,
+            'likes' => null,
+            'rating' => $this->getRating(),
+            'created' => $this->getCreated()->format('Y-m-d\TH:i:s'),
+        ];
+        if ($likes = $this->getLikes()->toArray()) {
+            $data['likes'] = $likes[0]->getVal();
+        }
+
+        return $data;
+    }
 }
 
