@@ -22,12 +22,12 @@
                         {% endif %}
                     {% endfor %}
 
-                    <a  href="#"
-                        {# href="{{ path('article_like', {'id': article.id, 'type': like}) }}" #}
-                        rv-on-click="like">
+                    <a href="{{ path('article_like', {'id': article.id, 'type': like}) }}"
+                        data-ajax>
                         {% if like == 0 %}UN{% endif %}LIKE
                     </a> |  {{ article.rating }} |
-                    <a href="{{ path('article_like', {'id': article.id, 'type': dislike}) }}" >
+                    <a href="{{ path('article_like', {'id': article.id, 'type': dislike}) }}"
+                        data-ajax>
                         {% if dislike == 0 %}UN{% endif %}DISLIKE
                     </a>
                 </div>
