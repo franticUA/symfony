@@ -44,7 +44,7 @@
         var Module = this.module(namespace);
         var injects = (Module.$inject || [])
             .map(function(serviceName) {
-                return this.serviceManager.container[serviceName]
+                return this.service(serviceName);
             }, this);
 
         var args = Array.prototype.slice
