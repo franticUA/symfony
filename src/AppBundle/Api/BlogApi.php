@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Bridge\Doctrine;
 
-abstract class VoteApi extends ApiController
+abstract class BlogApi extends ApiController
 {
     protected $repositoryLikes;
     protected $repository;
@@ -18,17 +18,45 @@ abstract class VoteApi extends ApiController
     protected $entityName;
     protected $entity;
     protected $userId;
+    public static $types = ['like' => 1, 'dislike' => -1, 'unlike' => 0];
 
-    function __construct($id, $type)
+    function __construct($id)
     {
         $this->id = $id;
+    }
+
+    function setType($type)
+    {
         $this->type = $type;
     }
 
-    function votedCheck($userId, EntityManager $em)
+    function setUserId($userId)
     {
-        $back_val = 0;
         $this->userId = $userId;
+    }
+
+    function setEntity(EntityManager $em)
+    {
+        $this->entity = $em->createQueryBuilder()
+            ->select('e')
+            ->addSelect('l')
+            ->from($this->repository,  'e')
+            ->join('e.likes', 'l', 'WITH', 'l.userId = :userId')
+            ->where('e.id=:id')
+            ->setParameters(['id' => $this->id, 'userId' => $this->userId])
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    function getEntity()
+    {
+        return $this->entity;
+    }
+
+    function votedCheck(EntityManager $em)
+    {
+        $deleted_value = 0;
+
         if ($like = $em->getRepository($this->repositoryLikes)
             ->findOneBy([$this->entity.'Id' => $this->id, 'userId' => $this->userId])
         ) {
@@ -38,7 +66,7 @@ abstract class VoteApi extends ApiController
                 throw new Exception('ALREADY_VOTED');
             } else {
                 //либо надо знак поменять, либо удалить
-                $back_val = $like->getVal();
+                $deleted_value = $like->getVal();
                 $em->remove($like);
                 $em->flush();
             }
@@ -46,15 +74,8 @@ abstract class VoteApi extends ApiController
             throw new Exception('NOT_EXIST');
         }
 
-        $this->entity = $em->createQueryBuilder()
-            ->select('e')
-            ->from($this->repository,  'e')
-            ->where('e.id=:id')
-            ->setParameter('id', $this->id)
-            ->getQuery()
-            ->getOneOrNullResult();
-        if ($back_val) {
-            $this->entity->setRating($this->entity->getRating() - $back_val);
+        if ($deleted_value) {
+            $this->entity->setRating($this->entity->getRating() - $deleted_value);
             $em->persist($this->entity);
             $em->flush();
         }
