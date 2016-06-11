@@ -41,7 +41,7 @@ abstract class BlogApi extends ApiController
             ->select('e')
             ->addSelect('l')
             ->from($this->repository,  'e')
-            ->join('e.likes', 'l', 'WITH', 'l.userId = :userId')
+            ->leftJoin('e.likes', 'l', 'WITH', 'l.userId = :userId')
             ->where('e.id=:id')
             ->setParameters(['id' => $this->id, 'userId' => $this->userId])
             ->getQuery()

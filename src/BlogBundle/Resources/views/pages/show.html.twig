@@ -7,19 +7,24 @@
         <div>{{ article.user.username }}, {{ article.created|date('l, F j, Y') }}</div>
     </article>
 
-    {% set like = 1 %}
-    {% set dislike = -1 %}
-    {% for l in article.likes %}
-        {% if l.val > 0 %}
-            {% set like = 0 %}
+    {% set like = 'like' %}
+    {% set dislike = 'dislike' %}
+
+    {% for like in article.likes %}
+        {% if like.val > 0 %}
+            {% set like = 'unlike' %}
         {% endif %}
-        {% if l.val < 0 %}
-            {% set dislike = 0 %}
+        {% if like.val < 0 %}
+            {% set dislike = 'unlike' %}
         {% endif %}
     {% endfor %}
-    <a href="{{ path('article_like', {'id': article.id, 'type': like}) }}">{% if like == 0 %}UN{% endif %}LIKE</a> |
-    {{ article.rating }} |
-    <a href="{{ path('article_like', {'id': article.id, 'type': dislike}) }}" >{% if dislike == 0 %}UN{% endif %}DISLIKE</a>
+
+    <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax="action={{ like }}">
+        {% if like == 0 %}UN{% endif %}LIKE
+    </a> |  {{ article.rating }} |
+    <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax ="action={{ dislike }}">
+        {% if dislike == 0 %}UN{% endif %}DISLIKE
+    </a>
 
     <div class="comments">
         <h3>Comments</h3>
@@ -34,19 +39,25 @@
                         {{ comment.content }}
                     </div>
 
-                    {% set like = 1 %}
-                    {% set dislike = -1 %}
-                    {% for l in comment.likes %}
-                        {% if l.val > 0 %}
-                            {% set like = 0 %}
+
+                    {% set like = 'like' %}
+                    {% set dislike = 'dislike' %}
+
+                    {% for like in comment.likes %}
+                        {% if like.val > 0 %}
+                            {% set like = 'unlike' %}
                         {% endif %}
-                        {% if l.val < 0 %}
-                            {% set dislike = 0 %}
+                        {% if like.val < 0 %}
+                            {% set dislike = 'unlike' %}
                         {% endif %}
                     {% endfor %}
-                    <a href="{{ path('comment_like', {'id': comment.id, 'type': like}) }}">{% if like == 0 %}UN{% endif %}LIKE</a> |
-                    {{ comment.rating }} |
-                    <a href="{{ path('comment_like', {'id': comment.id, 'type': dislike}) }}" >{% if dislike == 0 %}UN{% endif %}DISLIKE</a>
+
+                    <a href="{{ path('API_comment', {'id': comment.id}) }}" data-ajax="action={{ like }}">
+                        {% if like == 0 %}UN{% endif %}LIKE
+                    </a> |  {{ article.rating }} |
+                    <a href="{{ path('API_comment', {'id': comment.id}) }}" data-ajax ="action={{ dislike }}">
+                        {% if dislike == 0 %}UN{% endif %}DISLIKE
+                    </a>
 
                 </div>
             {% endfor %}

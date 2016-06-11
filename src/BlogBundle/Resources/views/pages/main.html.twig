@@ -13,11 +13,11 @@
                     {% set like = 'like' %}
                     {% set dislike = 'dislike' %}
 
-                    {% for l in article.likes %}
-                        {% if l.val > 0 %}
+                    {% for like in article.likes %}
+                        {% if like.val > 0 %}
                             {% set like = 'unlike' %}
                         {% endif %}
-                        {% if l.val < 0 %}
+                        {% if like.val < 0 %}
                             {% set dislike = 'unlike' %}
                         {% endif %}
                     {% endfor %}
