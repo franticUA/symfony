@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use UserBundle\Entity\User;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Comments
@@ -78,6 +80,12 @@ class Comments
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Article", inversedBy="comments")
+     * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
+     */
+    private $article;
 
     /**
      * @ORM\OneToMany(targetEntity="BlogBundle\Entity\CommentsLikes", mappedBy="comment")
@@ -253,11 +261,35 @@ class Comments
      *
      * @param UserBundle\Entity\User
      *
-     * @return Article
+     * @return User
      */
     public function setUser($user = null)
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get article
+     *
+     * @return Article
+     */
+    public function getArticle()
+    {
+        return $this->article;
+    }
+
+    /**
+     * Set article
+     *
+     * @param BlogBundle\Entity\Article
+     *
+     * @return Comments
+     */
+    public function setArticle($article = null)
+    {
+        $this->article = $article;
 
         return $this;
     }
@@ -299,18 +331,37 @@ class Comments
         ];
 
         $data = [
+            'id' => $this->getId(),
             'content' => $this->getContent(),
             'userId' => $this->getUserId(),
             'user' => $user,
-            'likes' => null,
+            'likes' => $this->getUserLike(),
             'rating' => $this->getRating(),
             'created' => $this->getCreated()->format('Y-m-d\TH:i:s'),
         ];
-        if ($likes = $this->getLikes()->toArray()) {
-            $data['likes'] = $likes[0]->getVal();
-        }
 
         return $data;
+    }
+
+    public function getUserLike()
+    {
+        $val = 0;
+
+        if ($likes = $this->getLikes()->toArray()) {
+            $val = $likes[0]->getVal();
+        }
+
+        return $val;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('articleId', new NotBlank(array(
+            'message' => 'Comment must have a article'
+        )));
+        $metadata->addPropertyConstraint('content', new NotBlank(array(
+            'message' => 'You must enter a comment'
+        )));
     }
 }
 

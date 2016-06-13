@@ -12,3 +12,14 @@
     font-size: 150%;
     margin: 20px 0px 20px 0;
 }
+
+.article-title > div,
+.comment-title > div {
+    display: inline-block;
+    margin: 0 10px 0 0;
+}
+.comments .comment{
+    padding: 5px;
+    background: #f1f1f1;
+    margin-bottom: 10px;
+}

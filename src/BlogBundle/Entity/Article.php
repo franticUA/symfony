@@ -56,6 +56,11 @@ class Article
     private $likes;
 
     /**
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Comments", mappedBy="article")
+     */
+    private $comments;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="content", type="text")
@@ -259,6 +264,30 @@ class Article
     }
 
     /**
+     * Get comments
+     *
+     * @return ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Set likes
+     *
+     * @param ArrayCollection
+     *
+     * @return Article
+     */
+    public function setComments($comments = null)
+    {
+        $this->comments = $comments;
+
+        return $this;
+    }
+
+    /**
      * Get article
      *
      * @return array
@@ -271,19 +300,28 @@ class Article
         ];
 
         $data = [
+            'id' => $this->getId(),
             'title' => $this->getTitle(),
             'content' => $this->getContent(),
             'userId' => $this->getUserId(),
             'user' => $user,
-            'likes' => null,
+            'userLike' => $this->getUserLike(),
             'rating' => $this->getRating(),
             'created' => $this->getCreated()->format('Y-m-d\TH:i:s'),
         ];
-        if ($likes = $this->getLikes()->toArray()) {
-            $data['likes'] = $likes[0]->getVal();
-        }
 
         return $data;
+    }
+
+    public function getUserLike()
+    {
+        $val = 0;
+
+        if ($likes = $this->getLikes()->toArray()) {
+            $val = $likes[0]->getVal();
+        }
+
+        return $val;
     }
 }
 

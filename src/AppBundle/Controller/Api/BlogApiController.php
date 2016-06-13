@@ -44,7 +44,7 @@ class BlogApiController extends ApiController
         }
 
         $vote->setUserId($userId);
-
+        
         if (!empty($action)){
             if (!isset(BlogApi::$types[$action])) {
 

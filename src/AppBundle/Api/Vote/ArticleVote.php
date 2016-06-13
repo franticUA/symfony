@@ -13,7 +13,7 @@ class ArticleVote extends BlogApi
     {
         $this->repositoryLikes = 'BlogBundle:ArticleLikes';
         $this->repository = 'BlogBundle:Article';
-        $this->entity = 'article';
+        $this->entityName = 'article';
         parent::__construct($id);
     }
 
@@ -21,7 +21,7 @@ class ArticleVote extends BlogApi
     {
         if ($this->type) {
             $this->entity->setRating($this->entity->getRating() + 1*$this->type);
-            
+
             $articleLike = new ArticleLikes();
             $articleLike->setUserId($this->userId);
             $articleLike->setArticleId($this->id);

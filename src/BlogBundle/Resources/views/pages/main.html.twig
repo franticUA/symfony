@@ -9,26 +9,13 @@
                 <div>{{ article.user.username }}, {{ article.created|date('l, F j, Y') }}</div>
                 <div class="article-content">{{ article.content|raw }}</div>
                 <div>
-
-                    {% set like = 'like' %}
-                    {% set dislike = 'dislike' %}
-
-                    {% for like in article.likes %}
-                        {% if like.val > 0 %}
-                            {% set like = 'unlike' %}
-                        {% endif %}
-                        {% if like.val < 0 %}
-                            {% set dislike = 'unlike' %}
-                        {% endif %}
-                    {% endfor %}
-
-                    <a href="{{ path('API_article', {'id': article.id}) }}"
-                        data-ajax="action={{ like }}">
-                        {% if like == 0 %}UN{% endif %}LIKE
+                    <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax="" data-method="post"
+                       data-action="{% if article.userLike > 0 %}unlike{% else %}like{% endif %}">
+                        +1
                     </a> |  {{ article.rating }} |
-                    <a href="{{ path('API_article', {'id': article.id}) }}"
-                        data-ajax ="action={{ dislike }}">
-                        {% if dislike == 0 %}UN{% endif %}DISLIKE
+                    <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax="" data-method="post"
+                       data-action="{% if article.userLike < 0 %}unlike{% else %}dislike{% endif %}">
+                        -1
                     </a>
                 </div>
                 <a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">комментарии</a>

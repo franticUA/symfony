@@ -13,7 +13,7 @@ class CommentsVote extends BlogApi
     {
         $this->repositoryLikes = 'BlogBundle:CommentsLikes';
         $this->repository = 'BlogBundle:Comments';
-        $this->entity = 'comment';
+        $this->entityName = 'comment';
         parent::__construct($id);
     }
 
