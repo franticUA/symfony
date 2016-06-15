@@ -20,6 +20,13 @@
 }
 .comments .comment{
     padding: 5px;
-    background: #f1f1f1;
     margin-bottom: 10px;
+}
+
+.comment-childs{
+    margin-left: 40px;
+    border-left: 1px dotted #e1e1e1;
+}
+.comment-childs .comment {
+    padding: 10px 0 0 10px;
 }

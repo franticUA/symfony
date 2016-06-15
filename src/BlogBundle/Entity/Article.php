@@ -274,6 +274,21 @@ class Article
     }
 
     /**
+     * Get comments
+     *
+     * @return ArrayCollection
+     */
+    public function getCommentsByParents()
+    {
+        $commentsByParents = [];
+        foreach ($this->comments as $comm) {
+            $commentsByParents[$comm->getParentId()][] = $comm;
+        }
+
+        return $commentsByParents;
+    }
+
+    /**
      * Set likes
      *
      * @param ArrayCollection

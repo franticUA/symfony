@@ -64,8 +64,8 @@ class BlogController extends Controller
             ->getRepository('BlogBundle:Article')
             ->findOneWithUserLike($id, $userId);
 
-        $comments = $article->getComments();
-
+        $comments = $article->getCommentsByParents();
+//dump($comments);die();
         return $this->render('BlogBundle::pages/show.html.twig', array(
             'article' => $article,
             'comments' => $comments,

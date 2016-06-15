@@ -40,16 +40,19 @@ class CommentController extends Controller
         $userId = 0;
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             $userId = $this->getUser()->getId();
+        } else {
+            $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
         }
 
         $post = '';
         if ($form->isValid()) {
-            $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
             $comment->setUser($this->getUser());
             $comment->setUserId($userId);
             $comment->setArticleId($id);
             $comment->setArticle($article);
-            $comment->setParentId(0);
+            if (!$comment->getParentId()) {
+                $comment->setParentId(0);
+            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
