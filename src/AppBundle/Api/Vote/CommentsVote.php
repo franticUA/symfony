@@ -19,8 +19,10 @@ class CommentsVote extends BlogApi
 
     public function liking(EntityManager $em)
     {
+        $new_rating = 0;
         if ($this->type) {
-            $this->entity->setRating($this->entity->getRating() + 1*$this->type);
+            $new_rating = $this->entity->getRating() + 1*$this->type;
+            $this->entity->setRating($new_rating );
 
             $entityLike = new CommentsLikes();
             $entityLike->setUserId($this->userId);
@@ -34,6 +36,6 @@ class CommentsVote extends BlogApi
             $message = 'DELETED';
         }
 
-        return $message;
+        return ['message' => $message, 'rating' => $new_rating];
     }
 }

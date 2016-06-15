@@ -70,7 +70,9 @@ class BlogApiController extends ApiController
         } else {
             try {
                 $vote->votedCheck($em);
-                $message = $vote->liking($em);
+                $result = $vote->liking($em);
+                $message = $result['message'];
+                $data = ['rating' => $result['rating']];
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 $code = self::ERR_CODE;
