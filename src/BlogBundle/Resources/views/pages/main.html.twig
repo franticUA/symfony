@@ -19,14 +19,14 @@
                         <a class="like-button" href="{{ path('API_article', {'id': article.id}) }}"
                             data-ajax
                             data-method="POST"
-                            data-action="{{ article.userLike > 0 ? 'unlike' : 'like'}}">
+                            data-action="{{ article.userLike ? 'unlike' : 'like'}}">
                             <i class="glyphicon glyphicon-thumbs-up"></i>
                         </a>
                         <span>{{ article.rating }}</span>
                         <a class="like-button" href="{{ path('API_article', {'id': article.id}) }}"
                             data-ajax
                             data-method="POST"
-                            data-action="{{ article.userLike > 0 ? 'unlike' : 'dislike'}}">
+                            data-action="{{ article.userLike ? 'unlike' : 'dislike'}}">
                             <i class="glyphicon glyphicon-thumbs-down"></i>
                         </a>
                     </div>
