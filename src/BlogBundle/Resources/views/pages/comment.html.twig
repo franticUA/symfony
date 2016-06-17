@@ -1,0 +1,25 @@
+<div class="comment-title">
+    <div class="comment-rating">
+        <a href="{{ path('API_comment', {'id': comment.id}) }}" data-ajax="" data-method="post"
+           data-action="{% if comment.userLike > 0 %}unlike{% else %}like{% endif %}">
+            +1
+        </a> |  {{ comment.rating }} |
+        <a href="{{ path('API_comment', {'id': comment.id}) }}" data-ajax="" data-method="post"
+           data-action="{% if comment.userLike < 0 %}unlike{% else %}dislike{% endif %}">
+            -1
+        </a>
+    </div>
+    <div class="comment-author">
+        {{ comment.user.username }}
+    </div>
+    <div class="comment-date">
+        {{ comment.created|date('l, F j, Y') }}
+    </div>
+</div>
+<div class="comment-content">
+    {{ comment.content }}
+</div>
+<div class="comment-add">
+    <button type="button" class="btn btn-default btn-xs add-comment-btn" data-parent-id="{{ comment.id }}">Добавить</button>
+    <div class="comment-form"></div>
+</div>

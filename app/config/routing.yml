@@ -19,6 +19,15 @@ BlogBundle_show:
 BlogBundle_new:
     path:      /blog/new
     defaults:  { _controller: BlogBundle:Blog:new }
+    requirements:
+        methods:  POST
+
+BlogBundle_comment_create:
+    path:     /comment/{id}
+    defaults: { _controller: BlogBundle:Comment:create }
+    requirements:
+        methods:  POST
+        id: \d+
 
 API_article:
     path:      /api/article/{id}

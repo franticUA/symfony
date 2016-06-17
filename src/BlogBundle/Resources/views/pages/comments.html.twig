@@ -1,0 +1,11 @@
+
+{% for comment in comments[key] %}
+    <div class="comment">
+        {% include 'BlogBundle:pages:comment.html.twig' with {'comment': comment} %}
+        {% if comments[comment.id] is defined and comments[comment.id]|length > 0 %}
+            <div class="comment-childs">
+                {% include 'BlogBundle:pages:comments.html.twig' with {'comments': comments, 'key': comment.id} %}
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}

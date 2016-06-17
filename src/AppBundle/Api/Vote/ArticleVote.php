@@ -13,15 +13,17 @@ class ArticleVote extends BlogApi
     {
         $this->repositoryLikes = 'BlogBundle:ArticleLikes';
         $this->repository = 'BlogBundle:Article';
-        $this->entity = 'article';
+        $this->entityName = 'article';
         parent::__construct($id);
     }
 
     public function liking(EntityManager $em)
     {
+        $new_rating = 0;
         if ($this->type) {
-            $this->entity->setRating($this->entity->getRating() + 1*$this->type);
-            
+            $new_rating = $this->entity->getRating() + 1*$this->type;
+            $this->entity->setRating($new_rating);
+
             $articleLike = new ArticleLikes();
             $articleLike->setUserId($this->userId);
             $articleLike->setArticleId($this->id);
@@ -34,6 +36,6 @@ class ArticleVote extends BlogApi
             $message = 'DELETED';
         }
 
-        return $message;
+        return ['message' => $message, 'rating' => $new_rating];
     }
 }

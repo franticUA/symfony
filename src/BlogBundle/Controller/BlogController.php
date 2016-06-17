@@ -4,10 +4,6 @@ namespace BlogBundle\Controller;
 
 
 use BlogBundle\Entity\Article;
-use BlogBundle\Entity\ArticleLikes;
-use BlogBundle\Entity\Comments;
-use BlogBundle\Entity\CommentsLikes;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,48 +53,22 @@ class BlogController extends Controller
         ));
     }
 
-    public function showAction($id, Request $request)
+    public function showAction($id)
     {
-        $comment = new Comments();
-        $form = $this->createFormBuilder($comment)
-            ->add('content', TextareaType::class, array('attr' => array('class' => 'form-control')))
-            ->add('add', SubmitType::class, array('label' => 'Add', 'attr' => array('class' => 'btn')))
-            ->getForm();
-
         $userId = 0;
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             $userId = $this->getUser()->getId();
-        }
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
-            $comment->setUser($this->getUser());
-            $comment->setUserId($userId);
-            $comment->setArticleId($id);
-            $comment->setParentId(0);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($comment);
-            $em->flush();
-
-            return $this->redirectToRoute('BlogBundle_show', ['id' => $id]);
         }
 
         $article = $this->getDoctrine()
             ->getRepository('BlogBundle:Article')
             ->findOneWithUserLike($id, $userId);
 
-        $repository = $this->getDoctrine()
-            ->getRepository('BlogBundle:Comments');
-
-
-        $comments = $repository->findWithUserLike($id, $userId);
-
+        $comments = $article->getCommentsByParents();
+//dump($comments);die();
         return $this->render('BlogBundle::pages/show.html.twig', array(
             'article' => $article,
             'comments' => $comments,
-            'form' => $form->createView(),
         ));
     }
 
@@ -128,7 +98,6 @@ class BlogController extends Controller
 
             return $this->redirectToRoute('BlogBundle_show', ['id' => $article->getId()]);
         }
-
 
         return $this->render('BlogBundle::pages/new.html.twig',[
             'form' => $form->createView(),

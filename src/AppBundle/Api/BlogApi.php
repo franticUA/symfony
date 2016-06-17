@@ -56,9 +56,9 @@ abstract class BlogApi extends ApiController
     function votedCheck(EntityManager $em)
     {
         $deleted_value = 0;
-
+        
         if ($like = $em->getRepository($this->repositoryLikes)
-            ->findOneBy([$this->entity.'Id' => $this->id, 'userId' => $this->userId])
+            ->findOneBy([$this->entityName.'Id' => $this->id, 'userId' => $this->userId])
         ) {
             if ($this->type != 0 && ($this->type * $like->getVal()) > 0 ) {
                 //запись в базе есть, если её не надо удалять, и знак совпадает с имеющимся,

@@ -4,74 +4,31 @@
     <h1>{{ article.title }}</h1>
     <article>
         <div class="article-content">{{ article.content|raw }}</div>
-        <div>{{ article.user.username }}, {{ article.created|date('l, F j, Y') }}</div>
+        <div class="article-title">
+            <div>
+                <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax="" data-method="post"
+                    data-action="{% if article.userLike > 0 %}unlike{% else %}like{% endif %}">
+                    +1
+                </a> |  {{ article.rating }} |
+                <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax="" data-method="post"
+                   data-action="{% if article.userLike < 0 %}unlike{% else %}dislike{% endif %}">
+                    -1
+                </a>
+            </div>
+            <div>{{ article.user.username }}</div>
+            <div>{{ article.created|date('l, F j, Y') }}</div>
+        </div>
     </article>
-
-    {% set like = 'like' %}
-    {% set dislike = 'dislike' %}
-
-    {% for like in article.likes %}
-        {% if like.val > 0 %}
-            {% set like = 'unlike' %}
-        {% endif %}
-        {% if like.val < 0 %}
-            {% set dislike = 'unlike' %}
-        {% endif %}
-    {% endfor %}
-
-    <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax="action={{ like }}">
-        {% if like == 0 %}UN{% endif %}LIKE
-    </a> |  {{ article.rating }} |
-    <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax ="action={{ dislike }}">
-        {% if dislike == 0 %}UN{% endif %}DISLIKE
-    </a>
 
     <div class="comments">
         <h3>Comments</h3>
         {% if comments|length > 0 %}
-            {% for comment in comments %}
-                <div class="comment">
-                    <div class="comment-author">
-                        {{ comment.user.username }} |
-                        {{ comment.created|date('l, F j, Y') }}
-                    </div>
-                    <div class="comment-content">
-                        {{ comment.content }}
-                    </div>
-
-
-                    {% set like = 'like' %}
-                    {% set dislike = 'dislike' %}
-
-                    {% for like in comment.likes %}
-                        {% if like.val > 0 %}
-                            {% set like = 'unlike' %}
-                        {% endif %}
-                        {% if like.val < 0 %}
-                            {% set dislike = 'unlike' %}
-                        {% endif %}
-                    {% endfor %}
-
-                    <a href="{{ path('API_comment', {'id': comment.id}) }}" data-ajax="action={{ like }}">
-                        {% if like == 0 %}UN{% endif %}LIKE
-                    </a> |  {{ article.rating }} |
-                    <a href="{{ path('API_comment', {'id': comment.id}) }}" data-ajax ="action={{ dislike }}">
-                        {% if dislike == 0 %}UN{% endif %}DISLIKE
-                    </a>
-
-                </div>
-            {% endfor %}
+            {% include 'BlogBundle:pages:comments.html.twig' with {'comments': comments, 'key': 0} %}
         {% endif %}
 
         <h3>Add Comment</h3>
-        {{ form_start(form) }}
-        {{ form_errors(form) }}
-
-        <div class="form-group">
-            {{ form_label(form.content) }}
-            {{ form_errors(form.content) }}
-            {{ form_widget(form.content) }}
+        <div class="form-wrap">
+            {{ render(controller('BlogBundle:Comment:new',{ 'id': article.id })) }}
         </div>
-        {{ form_end(form) }}
     </div>
 {% endblock %}

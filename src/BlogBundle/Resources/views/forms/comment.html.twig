@@ -1,0 +1,13 @@
+{{ form_start(form, { 'action': path('BlogBundle_comment_create' , { 'id' : comment.articleId }), 'method': 'POST', 'attr': {'class': 'blogger'} }) }}
+
+    {{ form_errors(form) }}
+
+    <div class="form-group">
+        {{ form_label(form.content) }}
+        {{ form_errors(form.content) }}
+        {{ form_widget(form.content) }}
+    </div>
+
+    {{ form_widget(form) }}
+
+{{ form_end(form) }}
