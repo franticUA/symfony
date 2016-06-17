@@ -1,5 +1,7 @@
-;(function() {
+;(function(app) {
     'use strict';
+
+    app.module('classes.Loader', Loader);
 
     /**
      *
@@ -10,11 +12,11 @@
     }
 
     Loader.prototype.show = function () {
-        this.container.addClass('loader');
+        this.container.addClass('waiting');
     };
 
     Loader.prototype.hide = function () {
-        this.container.removeClass('loader');
+        this.container.removeClass('waiting');
     };
 
-})();
+})(window.app || {});

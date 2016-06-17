@@ -1,0 +1,31 @@
+.popups-container {
+    // display: none;
+    position: fixed;
+
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    z-index: 1010;  
+}
+
+.popups-container .popup {
+    width: 600px;
+    margin: 30px auto;
+}
+
+.popup-backdrop {
+    opacity: .5;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: #000;
+}

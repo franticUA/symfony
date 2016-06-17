@@ -18,5 +18,17 @@ body {
 }
 
 .like-button {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
 
+    border-radius: 100%;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+    background-color: #EEEEEE;
+
+    padding: 5px 0px 0px 8px;
+}
+
+.like-button:hover {
+    transform: scale(1.2);
 }

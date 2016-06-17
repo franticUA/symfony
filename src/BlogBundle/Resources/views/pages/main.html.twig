@@ -8,10 +8,31 @@
                 data-id="{{ article.id }}">
 
                 <h3>{{ article.title }}</h3>
-                <div>{{ article.user.username }}, {{ article.created|date('l, F j, Y') }}</div>
-                <div class="article-content">{{ article.content|raw }}</div>
+                <div>{{ article.user.username }}, 
+                    {{ article.created|date('l, F j, Y') }}
+                </div>
+                <div class="article-content">
+                    {{ article.content | raw }}
+                </div>
                 <div>
 
+                    <div>
+                        <a class="like-button" href="{{ path('API_article', {'id': article.id}) }}"
+                            data-ajax
+                            data-method="POST"
+                            data-action="like">
+                            <i class="glyphicon glyphicon-thumbs-up"></i>
+                        </a>
+
+                        <a class="like-button" href="{{ path('API_article', {'id': article.id}) }}"
+                            data-ajax
+                            data-method="POST"
+                            data-action="dislike">
+                            <i class="glyphicon glyphicon-thumbs-down"></i>
+                        </a>
+                    </div>
+
+                    {#
                     {% set like = 'like' %}
                     {% set dislike = 'dislike' %}
 
@@ -27,12 +48,15 @@
                     <a href="{{ path('API_article', {'id': article.id}) }}"
                         data-ajax="action={{ like }}">
                         {% if like == 0 %}UN{% endif %}LIKE
-                    </a> |  {{ article.rating }} |
+                    </a>
+                    |  {{ article.rating }} |
                     <a href="{{ path('API_article', {'id': article.id}) }}"
                         data-ajax ="action={{ dislike }}">
                         {% if dislike == 0 %}UN{% endif %}DISLIKE
                     </a>
                 </div>
+                #}
+
                 <a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">комментарии</a>
             </article>
         {% else %}

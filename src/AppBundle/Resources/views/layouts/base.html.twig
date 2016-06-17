@@ -8,6 +8,8 @@
             <link rel="stylesheet" href="/vendor/alertify/themes/alertify.core.css" />
             <link rel="stylesheet" href="/vendor/alertify/themes/alertify.bootstrap.css" />
 
+            <link rel="stylesheet" href="/css/main.css" />
+            <link rel="stylesheet" href="/css/popups.css" />
             <link rel="stylesheet" href="/css/blog/article.css" />
         {% endblock %}
     </head>
@@ -35,10 +37,48 @@
 
             <script src="/js/src/classes/Request.js"></script>
             <script src="/js/src/classes/Messanger.js"></script>
+            <script src="/js/src/classes/PopupManager.js"></script>
+            <script src="/js/src/classes/Loader.js"></script>
             <script src="/js/src/widgets/Article.js"></script>
             <script src="/js/src/repositories/Article.js"></script>
             <script src="/js/src/classes/RepositoriesFactory.js"></script>
 
         {% endblock %}
+
+        <div class="loader">
+            <div class="loader-image">
+
+            </div>
+        </div>
+
+        
+        {# <div class="popup-backdrop">
+            
+        </div>
+        <div class="popups-container"
+            data-role="popups-container">
+
+            <div class="popup" 
+                data-role="popup" 
+                data-id="add-article">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div> #}
+
+
     </body>
 </html>
