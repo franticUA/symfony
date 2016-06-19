@@ -14,40 +14,77 @@
      * })
      *
      */
+     function RequestBuilder(request) {
+         this.request = null;
+         this.defaultOptions = {};
+         this.options = [];
+     }
 
+     RequestBuilder.prototype._decorate = function(promise) {
+         var promise = promise;
+         $.each(this.options, function(index, option) {
+             var decorator = options[0];
+             var args = options[0].splite(1);
+             args.unshift(promise);
 
-    /**
-     * RequestBuilder - description
-     *
-     * @constructor
-     * @param  {type} request description
-     * @return {type}         description
-     */
-    function RequestBuilder(request) {
-        this.request = request;
-    }
+             promise = decoator.call(args);
+         }, this);
 
-    /**
-     * RequestBuilder#setLoader - description
-     *
-     * @param  {type} isLoader description
-     * @param  {type} isHide   description
-     * @return {type}          description
-     */
-    RequestBuilder.prototype.setLoader = function(isLoader, isHide) {
-        this.request = isLoader
-                        ? new Loader(isHide)
+         return promise;
+     }
+
+     RequestBuilder.prototype.make = function(callback) {
+         var promise = callback();
+         promise = this._decorate(promise);
+         return promise;
+     };
+
+     RequestBuilder.prototype.setLoader = function(isLoader, isHide) {
+         this.options.push([Loader, isHide]);
+        //  this.request = isLoader
+        //                 ? new Loader(this.request, isHide)
+        //                 : this.request;
+     };
+
+     RequestBuilder.prototype.setAutoHandler = function(isAutoHandler) {
+         this.request = isErrorHandler
+                        ? new ErrorHandler(this.request)
                         : this.request;
-    };
+     };
 
-    RequestBuilder.prototype.setLoader = function(isErrorHandler, isHide) {
-        this.request = isErrorHandler
-                        ? new ErrorHandler(isHide)
-                        : this.request;
-    };
+     RequestBuilder.prototype.builder = function() {
+         return this.request;
+     };
 
-    RequestBuilder.prototype.builder = function() {
-        return this.request;
-    };
+     function LoaderHandler(promise) {
+         showLoader();
+          return promise.then(function() {
+              hideLoader();
+          });
+     }
+
+     function MessageHandler(promise) {
+         return promise
+             .then(function(result) {
+                 if (result.message) {
+                     alertify.success(result.message);
+                 }
+
+                 return result;
+             })
+             .fail(function(result) {
+                 if (result.responseJSON &&
+                     result.responseJSON.message
+                 ) {
+                     alertify.error(result.responseJSON.message);
+                 }
+                 else {
+                     alertify.error('error');
+                 }
+
+                 return result;
+             });
+     }
+
 
 })();

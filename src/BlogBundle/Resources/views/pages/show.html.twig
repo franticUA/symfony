@@ -6,7 +6,7 @@
         <div class="article-content">{{ article.content|raw }}</div>
         <div class="article-description">
             <div class="article-rating">
-                {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_article', 'id': article.id, 'userLike': article.userLike} %}
+                {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_article', 'id': article.id, 'userLike': article.userLike, 'rating': article.rating} %}
             </div>
             <div class="article-create">{{ article.created|date('l, F j, Y') }}</div>
             <div class="article-author">

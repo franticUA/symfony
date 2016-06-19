@@ -1,6 +1,6 @@
 <div class="comment-title">
     <div class="comment-rating">
-        {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_comment', 'id': comment.id, 'userLike': comment.userLike} %}
+        {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_comment', 'id': comment.id, 'userLike': comment.userLike, 'rating': comment.rating} %}
     </div>
     <div class="comment-author">
         {{ comment.user.username }}
