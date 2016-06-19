@@ -10,6 +10,30 @@
         {% endblock %}
     </head>
     <body>
+        {% block navbar %}
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/">HOME</a>
+                    </div>
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                        <div class="navbar-form navbar-right">
+
+                            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                Hello, {{ app.user.username }}!
+                                <a href="{{ path('fos_user_security_logout') }}">
+                                    [{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}]
+                                </a>
+                            {% else %}
+                                <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+                            {% endif %}
+                        </div>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        {% endblock %}
         {% block body %}
 
         {% endblock %}

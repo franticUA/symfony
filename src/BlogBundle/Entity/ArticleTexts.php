@@ -5,12 +5,12 @@ namespace BlogBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Likes
+ * ArticleTexts
  *
- * @ORM\Table(name="articles_likes")
- * @ORM\Entity(repositoryClass="BlogBundle\Repository\ArticleLikesRepository")
+ * @ORM\Table(name="article_texts")
+ * @ORM\Entity(repositoryClass="BlogBundle\Repository\ArticleTextsRepository")
  */
-class ArticleLikes
+class ArticleTexts
 {
     /**
      * @var int
@@ -29,24 +29,25 @@ class ArticleLikes
     private $articleId;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="content", type="text")
+     */
+    private $content;
+
+    /**
      * @var int
      *
-     * @ORM\Column(name="user_id", type="integer")
+     * @ORM\Column(name="sort", type="integer")
      */
-    private $userId;
+    private $sort;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="val", type="float")
-     */
-    private $val;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Article", inversedBy="likes")
+     * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Article", inversedBy="contentTexts")
      * @ORM\JoinColumn(name="article_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $article;
+
 
     /**
      * Get id
@@ -63,7 +64,7 @@ class ArticleLikes
      *
      * @param integer $articleId
      *
-     * @return ArticleLikes
+     * @return ArticleTexts
      */
     public function setArticleId($articleId)
     {
@@ -83,51 +84,51 @@ class ArticleLikes
     }
 
     /**
-     * Set userId
+     * Set content
      *
-     * @param integer $userId
+     * @param string $content
      *
-     * @return ArticleLikes
+     * @return ArticleTexts
      */
-    public function setUserId($userId)
+    public function setContent($content)
     {
-        $this->userId = $userId;
+        $this->content = $content;
 
         return $this;
     }
 
     /**
-     * Get userId
+     * Get content
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * Set sort
+     *
+     * @param integer $sort
+     *
+     * @return ArticleTexts
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+    /**
+     * Get sort
      *
      * @return int
      */
-    public function getUserId()
+    public function getSort()
     {
-        return $this->userId;
-    }
-
-    /**
-     * Set val
-     *
-     * @param float $val
-     *
-     * @return ArticleLikes
-     */
-    public function setVal($val)
-    {
-        $this->val = $val;
-
-        return $this;
-    }
-
-    /**
-     * Get val
-     *
-     * @return float
-     */
-    public function getVal()
-    {
-        return $this->val;
+        return $this->sort;
     }
 
     /**

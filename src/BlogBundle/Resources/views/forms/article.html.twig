@@ -1,0 +1,34 @@
+{% extends 'BlogBundle::pages/new.html.twig' %}
+{% block form %}
+
+    {{ form_start(form, { 'action': path('BlogBundle_create'), 'method': 'POST', 'attr': {'class': 'blogger'}, 'multipart': true }) }}
+
+    {{ form_errors(form) }}
+
+    <div class="form-group">
+        {{ form_label(form.title) }}
+        {{ form_errors(form.title) }}
+        {{ form_widget(form.title) }}
+    </div>
+
+    <div class="form-group">
+        <label for="textarea0"></label>
+        <textarea class="form-control" rows="3" name="content[1]" id="textarea0"></textarea>
+    </div>
+
+    <div class="form-group">
+        <input type="file" name="content[2]">
+    </div>
+
+    <div class="form-group">
+        <label for="textarea2"></label>
+        <textarea class="form-control" rows="3" name="content[3]" id="textarea2"></textarea>
+    </div>
+
+
+    {{ form_widget(form) }}
+
+    {{ form_end(form) }}
+
+
+{% endblock %}

@@ -14,10 +14,11 @@ class CommentsVote extends BlogApi
         $this->repositoryLikes = 'BlogBundle:CommentsLikes';
         $this->repository = 'BlogBundle:Comments';
         $this->entityName = 'comment';
+        $this->ratingCoefficient = 0.1;
         parent::__construct($id);
     }
 
-    public function liking(EntityManager $em)
+    public function liking()
     {
         $new_rating = 0;
         if ($this->type) {
@@ -29,9 +30,11 @@ class CommentsVote extends BlogApi
             $entityLike->setCommentId($this->id);
             $entityLike->setComment($this->entity);
             $entityLike->setVal(1*$this->type);
-            $em->persist($entityLike);
-            $em->flush();
+            $this->em->persist($entityLike);
+            $this->em->flush();
             $message = 'VOTED';
+
+            $this->updateAuthorRating(1*$this->type);
         } else {
             $message = 'DELETED';
         }

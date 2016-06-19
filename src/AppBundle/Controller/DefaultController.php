@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/default")
      */
     public function indexAction()
     {

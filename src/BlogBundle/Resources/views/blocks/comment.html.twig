@@ -1,13 +1,6 @@
 <div class="comment-title">
     <div class="comment-rating">
-        <a href="{{ path('API_comment', {'id': comment.id}) }}" data-ajax="" data-method="post"
-           data-action="{% if comment.userLike > 0 %}unlike{% else %}like{% endif %}">
-            +1
-        </a> |  {{ comment.rating }} |
-        <a href="{{ path('API_comment', {'id': comment.id}) }}" data-ajax="" data-method="post"
-           data-action="{% if comment.userLike < 0 %}unlike{% else %}dislike{% endif %}">
-            -1
-        </a>
+        {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_comment', 'id': comment.id, 'userLike': comment.userLike} %}
     </div>
     <div class="comment-author">
         {{ comment.user.username }}

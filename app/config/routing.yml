@@ -3,21 +3,32 @@ app:
     type:     annotation
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
 BlogBundle_list:
-    path:      /blog/{page}
+    path:      /{page}
     defaults:  { _controller: BlogBundle:Blog:list, page: 1 }
     requirements:
         page:  \d+
 
+BlogBundle_profile:
+    path:      /user/{username}/{page}
+    defaults:  { _controller: BlogBundle:Blog:user, page: 1}
+    requirements:
+        page:  \d+
+
 BlogBundle_show:
-    path:      /blog/article/{id}
-    defaults:  { _controller: BlogBundle:Blog:show }
+    path:      /article/{id}
+    defaults:  { _controller: BlogBundle:Article:show }
     requirements:
         id:  \d+
 
 BlogBundle_new:
-    path:      /blog/new
-    defaults:  { _controller: BlogBundle:Blog:new }
+    path:      /new
+    defaults:  { _controller: BlogBundle:Article:new }
+
+BlogBundle_create:
+    path:      /create
+    defaults:  { _controller: BlogBundle:Article:create }
     requirements:
         methods:  POST
 

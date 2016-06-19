@@ -4,26 +4,25 @@
     <h1>{{ article.title }}</h1>
     <article>
         <div class="article-content">{{ article.content|raw }}</div>
-        <div class="article-title">
-            <div>
-                <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax="" data-method="post"
-                    data-action="{% if article.userLike > 0 %}unlike{% else %}like{% endif %}">
-                    +1
-                </a> |  {{ article.rating }} |
-                <a href="{{ path('API_article', {'id': article.id}) }}" data-ajax="" data-method="post"
-                   data-action="{% if article.userLike < 0 %}unlike{% else %}dislike{% endif %}">
-                    -1
+        <div class="article-description">
+            <div class="article-rating">
+                {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_article', 'id': article.id, 'userLike': article.userLike} %}
+            </div>
+            <div class="article-create">{{ article.created|date('l, F j, Y') }}</div>
+            <div class="article-author">
+                <a href="{{ path('BlogBundle_profile', {'username': article.user.username}) }}">
+                    {{ article.user.username }}
                 </a>
             </div>
-            <div>{{ article.user.username }}</div>
-            <div>{{ article.created|date('l, F j, Y') }}</div>
         </div>
     </article>
 
-    <div class="comments">
+    <div class="comments" id="comments">
         <h3>Comments</h3>
         {% if comments|length > 0 %}
-            {% include 'BlogBundle:pages:comments.html.twig' with {'comments': comments, 'key': 0} %}
+            {% include 'BlogBundle:blocks:comments.html.twig' with {'comments': comments, 'key': 0} %}
+        {% else %}
+            &mdash;
         {% endif %}
 
         <h3>Add Comment</h3>

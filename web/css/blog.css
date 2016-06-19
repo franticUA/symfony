@@ -5,15 +5,20 @@
 .main-content img {
     max-width: 100%;
 }
-
+.articles article {
+    margin: 10px 0px 30px 0px;
+}
+.articles article h3{
+    margin-top: 0px;
+}
 .article-content{
     border: 1px solid #c0c0c0;
     padding: 10px;
     font-size: 150%;
-    margin: 20px 0px 20px 0;
+    margin: 10px 0px 10px 0;
 }
 
-.article-title > div,
+.article-description > div,
 .comment-title > div {
     display: inline-block;
     margin: 0 10px 0 0;
@@ -29,4 +34,13 @@
 }
 .comment-childs .comment {
     padding: 10px 0 0 10px;
+}
+
+.user-info{
+    border: 1px solid #e1e1e1;
+    padding: 10px;
+    background: #f1f1f1;
+}
+.user-info .username {
+    margin: 0px;
 }

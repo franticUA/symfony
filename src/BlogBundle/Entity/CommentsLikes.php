@@ -48,7 +48,7 @@ class CommentsLikes
 
     /**
      * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Comments", inversedBy="likes")
-     * @ORM\JoinColumn(name="comment_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="comment_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $comment;
 

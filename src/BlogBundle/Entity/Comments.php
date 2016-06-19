@@ -70,20 +70,20 @@ class Comments
     /**
      * @var float
      *
-     * @ORM\Column(name="rating", type="float")
+     * @ORM\Column(name="rating", type="float", options={"default" = 0})
      * @Assert\NotBlank()
      */
     private $rating;
 
     /**
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="BlogBundle\Entity\Article", inversedBy="comments")
-     * @ORM\JoinColumn(name="article_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="article_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $article;
 

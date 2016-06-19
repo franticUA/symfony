@@ -46,31 +46,26 @@ class Article
 
     /**
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\ArticleLikes", mappedBy="article")
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\ArticleTexts", mappedBy="article")
+     * @ORM\OrderBy({"sort" = "ASC"})
      */
-    private $likes;
+    private $contentTexts;
 
     /**
-     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Comments", mappedBy="article")
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\ArticleFiles", mappedBy="article")
+     * @ORM\OrderBy({"sort" = "ASC"})
      */
-    private $comments;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="content", type="text")
-     */
-    private $content;
+    private $contentFiles;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="rating", type="float")
+     * @ORM\Column(name="rating", type="float", options={"default" = 0})
      * @Assert\NotBlank()
      */
     private $rating;
@@ -83,6 +78,17 @@ class Article
      * @Assert\Type("\DateTime")
      */
     private $created;
+
+    /**
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\ArticleLikes", mappedBy="article")
+     */
+    private $likes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\Comments", mappedBy="article")
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $comments;
 
 
     /**
@@ -144,27 +150,25 @@ class Article
     }
 
     /**
-     * Set content
-     *
-     * @param string $content
-     *
-     * @return Article
-     */
-    public function setContent($content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
      * Get content
      *
      * @return string
      */
     public function getContent()
     {
-        return $this->content;
+        $content = [];
+        $texts = $this->contentTexts->getValues();
+        foreach ($texts as $element) {
+            $content[$element->getSort()] = $element->getContent();
+        }
+
+        $files = $this->contentFiles->getValues();
+        foreach ($files as $element) {
+            $content[$element->getSort()] = '<img src="/'.$element->getWebPath().'">';
+        }
+        ksort($content);
+
+        return implode("<br>", $content);
     }
 
     /**
@@ -237,6 +241,58 @@ class Article
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * Set contentTexts
+     *
+     * @param ArrayCollection
+     *
+     * @return Article
+     */
+    public function setContentTexts($texts = null)
+    {
+        $this->contentTexts = $texts;
+
+        return $this;
+    }
+
+    /**
+     * Get contentTexts
+     *
+     * @param ArrayCollection
+     *
+     * @return Article
+     */
+    public function getContentTexts()
+    {
+        return $this->contentTexts;
+    }
+
+    /**
+     * Set contentFiles
+     *
+     * @param ArrayCollection
+     *
+     * @return Article
+     */
+    public function setContentFiles($files = null)
+    {
+        $this->contentFiles = $files;
+
+        return $this;
+    }
+
+    /**
+     * Get contentTexts
+     *
+     * @param ArrayCollection
+     *
+     * @return Article
+     */
+    public function getContentFiles()
+    {
+        return $this->contentFiles;
     }
 
     /**

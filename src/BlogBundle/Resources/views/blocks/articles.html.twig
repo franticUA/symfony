@@ -1,0 +1,23 @@
+<div class="articles">
+    {% for article in articles %}
+        <article data-module="widgets.Article"
+                 data-id="{{ article.id }}">
+            <h3><a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">{{ article.title }}</a></h3>
+            <div class="article-content">{{ article.content|raw }}</div>
+            <div class="article-description">
+                <div class="article-rating">
+                    {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_article', 'id': article.id, 'userLike': article.userLike} %}
+                </div>
+                <div class="article-create">{{ article.created|date('l, F j, Y') }}</div>
+                <div class="article-author">
+                    <a href="{{ path('BlogBundle_profile', {'username': article.user.username}) }}">
+                        {{ article.user.username }}
+                    </a>
+                </div>
+            </div>
+            <a href="{{ path('BlogBundle_show', { 'id': article.id }) }}#comments">комментарии</a>
+        </article>
+    {% else %}
+        <p>There are no blog entries</p>
+    {% endfor %}
+</div>

@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine;
 
 abstract class BlogApi extends ApiController
 {
+    protected $em;
     protected $repositoryLikes;
     protected $repository;
     protected $id;
@@ -17,7 +18,9 @@ abstract class BlogApi extends ApiController
     protected $type;
     protected $entityName;
     protected $entity;
+    protected $author;
     protected $userId;
+    protected $ratingCoefficient = 1;
     public static $types = ['like' => 1, 'dislike' => -1, 'unlike' => 0];
 
     function __construct($id)
@@ -30,20 +33,36 @@ abstract class BlogApi extends ApiController
         $this->type = $type;
     }
 
+    function setEm(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     function setUserId($userId)
     {
         $this->userId = $userId;
     }
 
-    function setEntity(EntityManager $em)
+    function setEntity()
     {
-        $this->entity = $em->createQueryBuilder()
+        if (!$entity = $this->em->createQueryBuilder()
             ->select('e')
             ->addSelect('l')
-            ->from($this->repository,  'e')
+            ->from($this->repository, 'e')
             ->leftJoin('e.likes', 'l', 'WITH', 'l.userId = :userId')
             ->where('e.id=:id')
             ->setParameters(['id' => $this->id, 'userId' => $this->userId])
+            ->getQuery()
+            ->getOneOrNullResult()) {
+            throw new Exception('OBJECT_NOT_FOUND');
+        }
+        $this->entity = $entity;
+
+        $this->author = $this->em->createQueryBuilder()
+            ->select('u')
+            ->from('UserBundle:User', 'u')
+            ->where('u.id=:id')
+            ->setParameters(['id' => $entity->getUserId()])
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -53,11 +72,11 @@ abstract class BlogApi extends ApiController
         return $this->entity;
     }
 
-    function votedCheck(EntityManager $em)
+    function votedCheck()
     {
         $deleted_value = 0;
         
-        if ($like = $em->getRepository($this->repositoryLikes)
+        if ($like = $this->em->getRepository($this->repositoryLikes)
             ->findOneBy([$this->entityName.'Id' => $this->id, 'userId' => $this->userId])
         ) {
             if ($this->type != 0 && ($this->type * $like->getVal()) > 0 ) {
@@ -67,8 +86,8 @@ abstract class BlogApi extends ApiController
             } else {
                 //либо надо знак поменять, либо удалить
                 $deleted_value = $like->getVal();
-                $em->remove($like);
-                $em->flush();
+                $this->em->remove($like);
+                $this->em->flush();
             }
         } elseif ($this->type == 0) {
             throw new Exception('NOT_EXIST');
@@ -76,10 +95,19 @@ abstract class BlogApi extends ApiController
 
         if ($deleted_value) {
             $this->entity->setRating($this->entity->getRating() - $deleted_value);
-            $em->persist($this->entity);
-            $em->flush();
+            $this->em->persist($this->entity);
+            $this->em->flush();
+
+            $this->updateAuthorRating(-$deleted_value);
         }
     }
 
-    abstract function liking(EntityManager $em);
+    protected function updateAuthorRating($val)
+    {
+        $this->author->setRating($this->author->getRating() + $this->ratingCoefficient * $val);
+        $this->em->persist($this->author);
+        $this->em->flush();
+    }
+
+    abstract function liking();
 }

@@ -17,7 +17,7 @@ class ArticleVote extends BlogApi
         parent::__construct($id);
     }
 
-    public function liking(EntityManager $em)
+    public function liking()
     {
         $new_rating = 0;
         if ($this->type) {
@@ -29,9 +29,11 @@ class ArticleVote extends BlogApi
             $articleLike->setArticleId($this->id);
             $articleLike->setArticle($this->entity);
             $articleLike->setVal(1*$this->type);
-            $em->persist($articleLike);
-            $em->flush();
+            $this->em->persist($articleLike);
+            $this->em->flush();
             $message = 'VOTED';
+            
+            $this->updateAuthorRating(1*$this->type);
         } else {
             $message = 'DELETED';
         }

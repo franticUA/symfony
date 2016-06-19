@@ -54,7 +54,8 @@ class BlogApiController extends ApiController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $vote->setEntity($em);
+        $vote->setEm($em);
+        $vote->setEntity();
 
         $code = self::OK_CODE;
         $message = '';
