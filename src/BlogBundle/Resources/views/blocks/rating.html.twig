@@ -7,6 +7,6 @@
 <a class="like-button" href="{{ path(route, {'id': article.id}) }}"
    data-ajax
    data-method="post"
-   data-action="{{ userLike ? 'unlike' : 'dislike'}}">
+   data-action="{{ userLike < 0 ? 'unlike' : 'dislike'}}">
     <i class="glyphicon glyphicon-thumbs-down"></i>
 </a>

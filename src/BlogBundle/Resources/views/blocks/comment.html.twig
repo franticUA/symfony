@@ -1,4 +1,4 @@
-<div class="comment-title">
+<div class="comment-title" id="comment-{{ comment.id }}">
     <div class="comment-rating">
         {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_comment', 'id': comment.id, 'userLike': comment.userLike, 'rating': comment.rating} %}
     </div>

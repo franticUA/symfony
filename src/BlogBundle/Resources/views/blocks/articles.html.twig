@@ -1,6 +1,7 @@
 <div class="articles">
     {% for article in articles %}
-        <article data-module="widgets.Article"
+        <article class="article"
+                 data-module="widgets.Article"
                  data-id="{{ article.id }}">
             <h3><a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">{{ article.title }}</a></h3>
             <div class="article-content">{{ article.content|raw }}</div>
