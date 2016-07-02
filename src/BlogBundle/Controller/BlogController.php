@@ -44,11 +44,13 @@ class BlogController extends Controller
         $offset = ($page > 1) ? ($page - 1) * $limit : 0;
 
         $query = $em->createQueryBuilder()
-            ->select(['b', 'l', 't', 'f'])
+            ->select(['b', 'l', 't', 'f', 'c'])
+            //->addSelect('count(c.id) as commentsCount')
             ->from('BlogBundle:Article',  'b')
             ->leftJoin('b.likes', 'l', 'WITH', 'b.id=l.articleId AND l.userId=:userId')
             ->leftJoin('b.contentTexts', 't')
             ->leftJoin('b.contentFiles', 'f')
+            ->leftJoin('b.comments', 'c')
             ->setParameter('userId', $userId)
             ->addOrderBy('b.id', 'DESC')
             ->setFirstResult($offset)

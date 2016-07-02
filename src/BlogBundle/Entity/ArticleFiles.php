@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="article_files")
  * @ORM\Entity(repositoryClass="BlogBundle\Repository\ArticleFilesRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class ArticleFiles
 {
@@ -86,13 +87,13 @@ class ArticleFiles
     }
 
     /**
-     * Set filename
+     * Set path
      *
      * @param string $path
      *
      * @return ArticleFiles
      */
-    public function setFilename($path)
+    public function setPath($path)
     {
         $this->path = $path;
 
@@ -113,28 +114,69 @@ class ArticleFiles
     {
         return null === $this->path
             ? null
-            : $this->getUploadRootDir().'/'.$this->path;
+            : $this->getUploadRootDir().$this->path;
     }
 
     public function getWebPath()
     {
         return null === $this->path
             ? null
-            : $this->getUploadDir().'/'.$this->path;
+            : $this->getUploadDir().$this->path;
     }
 
     protected function getUploadRootDir()
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        return __DIR__.'/../../../web/'.$this->getUploadDir();
+        return __DIR__.'/../../../web'.$this->getUploadDir();
     }
 
     protected function getUploadDir()
     {
         // get rid of the __DIR__ so it doesn't screw up
         // when displaying uploaded doc/image in the view.
-        return 'article_files';
+        return '/article_files/';
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+        if (null !== $this->file) {
+            $id = $this->getArticle()->getId();
+
+            $path = ceil($id / 1000)."/";
+            if (!is_dir($this->getUploadRootDir().$path)) {
+                mkdir($this->getUploadRootDir().$path);
+            }
+            $path .= $id.'/';
+            if (!is_dir($this->getUploadRootDir().$path)) {
+                mkdir($this->getUploadRootDir().$path);
+            }
+
+            $filename = uniqid(rand(100, 999)."f").".".$this->getFile()->guessExtension();
+
+            $this->setPath($path.$filename);
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        if (null === $this->getFile()) {
+            return;
+        }
+
+        $dir = explode("/", $this->getPath());
+        $filename = array_pop($dir);
+        $this->getFile()->move($this->getUploadRootDir().implode("/", $dir), $filename );
+
+        unset($this->file);
     }
 
     /**
@@ -162,7 +204,11 @@ class ArticleFiles
     }
 
     /**
-     * @Assert\File(maxSize="6000000")
+     * @Assert\File(
+     *     maxSize="12000000",
+     *     mimeTypes = {"image/jpeg", "image/png"},
+     *     mimeTypesMessage = "Please upload a valid image file"
+     * )
      */
     private $file;
 
@@ -208,34 +254,6 @@ class ArticleFiles
         $this->article = $article;
 
         return $this;
-    }
-
-    public function upload()
-    {
-        if (null === $this->getFile() || null === $this->getArticleId()) {
-            return;
-        }
-        $id = $this->getArticleId();
-        $path = "/".ceil($id / 1000)."/";
-        if (!is_dir($this->getUploadRootDir().$path)) {
-            mkdir($this->getUploadRootDir().$path);
-        }
-        $path .= $id.'/';
-        if (!is_dir($this->getUploadRootDir().$path)) {
-            mkdir($this->getUploadRootDir().$path);
-        }
-
-        $imageSize = getimagesize($this->getFile());
-        $exp = explode("/", $imageSize['mime']);
-        $filename = uniqid(rand(100, 999)."f").".".$exp[1];
-
-        $this->getFile()->move(
-            $this->getUploadRootDir().$path,
-            $filename
-        );
-
-        $this->path = $path.$filename;
-        $this->file = null;
     }
 }
 

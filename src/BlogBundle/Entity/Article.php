@@ -18,6 +18,8 @@ class Article
     public function __construct()
     {
         $this->likes = new ArrayCollection();
+        $this->contentTexts = new ArrayCollection();
+        $this->contentFiles = new ArrayCollection();
         $this->setCreated(new \DateTime());
         $this->setRating(0);
     }
@@ -51,14 +53,16 @@ class Article
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\ArticleTexts", mappedBy="article")
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\ArticleTexts", mappedBy="article", cascade={"persist"})
      * @ORM\OrderBy({"sort" = "ASC"})
+     * @Assert\Valid
      */
     private $contentTexts;
 
     /**
-     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\ArticleFiles", mappedBy="article")
+     * @ORM\OneToMany(targetEntity="BlogBundle\Entity\ArticleFiles", mappedBy="article", cascade={"persist"})
      * @ORM\OrderBy({"sort" = "ASC"})
+     * @Assert\Valid
      */
     private $contentFiles;
 
@@ -159,16 +163,16 @@ class Article
         $content = [];
         $texts = $this->contentTexts->getValues();
         foreach ($texts as $element) {
-            $content[$element->getSort()] = $element->getContent();
+            $content[$element->getSort()] = ['val' => $element->getContent(), 'type' => 'text'];
         }
 
         $files = $this->contentFiles->getValues();
         foreach ($files as $element) {
-            $content[$element->getSort()] = '<img src="/'.$element->getWebPath().'">';
+            $content[$element->getSort()] = ['val' => $element->getWebPath(), 'type' => 'img'];
         }
         ksort($content);
 
-        return implode("<br>", $content);
+        return $content;
     }
 
     /**
@@ -393,6 +397,64 @@ class Article
         }
 
         return $val;
+    }
+
+    /**
+     * Add contentText
+     *
+     * @param ArticleTexts
+     *
+     * @return Article
+     */
+    public function addContentText(ArticleTexts $text)
+    {
+        $text->setArticle($this);
+        $this->contentTexts[] = $text;
+
+        return $this;
+    }
+
+    /**
+     * Remove contentText
+     *
+     * @param ArticleTexts
+     *
+     * @return Article
+     */
+    public function removeContentText(ArticleTexts $text)
+    {
+        $this->contentTexts->removeElement($text);
+
+        return $this;
+    }
+
+    /**
+     * Add contentFile
+     *
+     * @param ArticleFiles
+     *
+     * @return Article
+     */
+    public function addContentFile(ArticleFiles $file)
+    {
+        $file->setArticle($this);
+        $this->contentFiles[] = $file;
+
+        return $this;
+    }
+
+    /**
+     * Remove contentFile
+     *
+     * @param ArticleFiles
+     *
+     * @return Article
+     */
+    public function removeContentFile(ArticleFiles $file)
+    {
+        $this->contentFiles->removeElement($file);
+
+        return $this;
     }
 }
 

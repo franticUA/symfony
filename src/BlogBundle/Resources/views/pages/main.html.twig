@@ -1,8 +1,5 @@
 {% extends 'BlogBundle::layouts/base.html.twig' %}
 {% block content %}
-    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-        <a href="{{ path('BlogBundle_new') }}" class="btn btn-info">Добавить</a>
-    {% endif %}
     {% include 'BlogBundle:blocks:articles.html.twig' with {'articles': articles} %}
     {% if paginator.pages > 1 %}
         {% include 'BlogBundle:blocks:pagination.html.twig' with {'paginator': paginator} %}

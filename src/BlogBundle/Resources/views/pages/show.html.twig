@@ -1,4 +1,5 @@
 {% extends 'BlogBundle::layouts/base.html.twig' %}
+{% block title %}: {{ article.title }}{% endblock %}
 {% block content %}
 
     <h1>{{ article.title }}</h1>
@@ -6,7 +7,15 @@
              data-module="widgets.Article"
              data-id="{{ article.id }}">
         <div class="article-content">
-            {{ article.content|raw }}
+            {% for content in article.content %}
+                {% if content.type == 'img' %}
+                    <div class="">
+                        <img src="{{ content.val }}">
+                    </div>
+                {% else %}
+                    {{ content.val }}
+                {% endif %}
+            {% endfor %}
         </div>
         <div class="article-description">
             <div class="article-rating">
@@ -34,4 +43,31 @@
             {{ render(controller('BlogBundle:Comment:new',{ 'id': article.id })) }}
         </div>
     </div>
+{% endblock %}
+
+
+{% block js %}
+    {{ parent() }}
+<script>
+$(document).ready(function () {
+    var $commentForm = $('.form-wrap').html();
+
+    $('.add-comment-btn').click(function (e) {
+        if (!$(this).hasClass('open')) {
+            e.preventDefault();
+            var parentId = $(this).data('parent-id');
+            $commentForm = $commentForm.replace(/_default_/g, parentId);
+            $(this).siblings('.comment-form').append($commentForm)
+                    .find('#comment-parent-id-'+parentId).val(parentId);
+            $(this).addClass('open');
+        } else {
+            $(this).siblings('.comment-form').toggle();
+        }
+
+        var newName = $(this).data('second-name');
+        $(this).data('second-name', $(this).html());
+        $(this).html(newName);
+    });
+});
+</script>
 {% endblock %}

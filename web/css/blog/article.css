@@ -17,6 +17,10 @@ body {
     background-color: #ffffff;
 }
 
+.article img{
+    max-width: 100%;
+}
+
 .like-button {
     display: inline-block;
     width: 30px;

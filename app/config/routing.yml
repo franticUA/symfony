@@ -46,9 +46,22 @@ API_article:
         id:  \d+
         type: (0|1|-1)
 
+API_article_create:
+    path:      /api/article/new
+    defaults:  { _controller: AppBundle:Api/BlogApi:createArticle}
+    requirements:
+        methods:  POST
+
 API_comment:
     path:      /api/comment/{id}
     defaults:  { _controller: AppBundle:Api/BlogApi:comment}
     requirements:
         id:  \d+
         type: (0|1|-1)
+
+API_comment_create:
+    path:      /api/comment/{id}/new
+    defaults:  { _controller: AppBundle:Api/BlogApi:createComment}
+    requirements:
+        id:  \d+
+        methods:  POST

@@ -7,9 +7,6 @@ use BlogBundle\Entity\Comments;
 use BlogBundle\Form\CommentsForm;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Comment controller.
- */
 class CommentController extends Controller
 {
     public function newAction($id)

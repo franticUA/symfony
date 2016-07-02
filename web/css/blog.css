@@ -15,7 +15,9 @@
     font-size: 150%;
     margin: 10px 0px 10px 0;
 }
-
+.article-description {
+    margin-bottom: 10px;
+}
 .article-description > div,
 .comment-title > div {
     display: inline-block;
@@ -24,6 +26,11 @@
 .comments .comment{
     padding: 5px;
     margin-bottom: 10px;
+    background: #FFFFFF;
+}
+
+.comment-content{
+    padding: 10px 0;
 }
 
 .comment-childs{
@@ -41,4 +48,7 @@
 }
 .user-info .username {
     margin: 0px;
+}
+.add-btns-wrap{
+    padding: 10px 0px;
 }

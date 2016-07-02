@@ -3,16 +3,21 @@
         {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_comment', 'id': comment.id, 'userLike': comment.userLike, 'rating': comment.rating} %}
     </div>
     <div class="comment-author">
-        {{ comment.user.username }}
+        <a href="{{ path('BlogBundle_profile', {'username': comment.user.username}) }}">
+            {{ comment.user.username }}
+        </a>
     </div>
     <div class="comment-date">
         {{ comment.created|date('l, F j, Y') }}
     </div>
 </div>
 <div class="comment-content">
-    {{ comment.content }}
+    {{ comment.content|nl2br }}
 </div>
 <div class="comment-add">
-    <button type="button" class="btn btn-default btn-xs add-comment-btn" data-parent-id="{{ comment.id }}">Добавить</button>
+    <button type="button"
+            class="btn btn-default btn-xs add-comment-btn"
+            data-parent-id="{{ comment.id }}"
+            data-second-name="cancel">Answer</button>
     <div class="comment-form"></div>
 </div>

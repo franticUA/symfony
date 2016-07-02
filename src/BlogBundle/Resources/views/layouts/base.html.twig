@@ -9,23 +9,33 @@
       <div class="container">
 
           <div class="navbar-header">
-              <a class="navbar-brand" href="#">
+              <a class="navbar-brand" href="{{ path('BlogBundle_list') }}">
                   <i class="glyphicon glyphicon-home"></i>
               </a>
 
+              {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                  <a href="{{ path('BlogBundle_new') }}" class="navbar-btn btn btn-info">Добавить</a>
+              {% endif %}
 
           </div>
 
           <ul class="nav navbar-nav navbar-right">
-              <li>
-                  {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+              {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                  <li>
+                      <a href="{{ path('BlogBundle_profile', {'username': app.user.username}) }}">
+                          {{ app.user.username }}
+                      </a>
+                  </li>
+                  <li>
                       <a href="{{ path('fos_user_security_logout') }}">
                           [{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}]
                       </a>
-                  {% else %}
+                  </li>
+              {% else %}
+                  <li>
                       <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
-                  {% endif %}
-              </li>
+                  </li>
+              {% endif %}
           </ul>
 
       </div>

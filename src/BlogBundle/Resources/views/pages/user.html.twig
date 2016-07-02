@@ -1,8 +1,10 @@
 {% extends 'BlogBundle::layouts/base.html.twig' %}
+{% block title %}: {{ user.username }}{% endblock %}
 {% block content %}
     <div class="user-info">
         <h1 class="username"><strong>Username:</strong> {{ user.username }}</h1>
         <div class="user-regdate"><strong>Registered at:</strong> {{ user.registeredAt|date('F j, Y') }}</div>
+        <div class="user-rating"><strong>Rating:</strong> {{ user.rating }}</div>
     </div>
     {% include 'BlogBundle:blocks:articles.html.twig' with {'articles': articles} %}
     {% if paginator.pages > 1 %}

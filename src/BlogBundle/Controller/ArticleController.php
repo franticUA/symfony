@@ -9,8 +9,6 @@
 namespace BlogBundle\Controller;
 
 
-use BlogBundle\Entity\ArticleFiles;
-use BlogBundle\Entity\ArticleTexts;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use BlogBundle\Entity\Article;
 use BlogBundle\Form\ArticleForm;
@@ -52,6 +50,7 @@ class ArticleController extends Controller
 
     public function createAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
         $userId = 0;
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             $userId = $this->getUser()->getId();
@@ -59,69 +58,24 @@ class ArticleController extends Controller
             $this->denyAccessUnlessGranted('ROLE_USER', null, 'Unable to access this page!');
         }
 
-        $article  = new Article();
-        $form     = $this->createForm(ArticleForm::class, $article);
+        $article = new Article();
+        $form = $this->createForm(ArticleForm::class, $article);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isValid() && !empty($article->getContentFiles()) && !empty($article->getContentTexts())) {
             $article->setUser($this->getUser());
             $article->setUserId($userId);
 
-            $content_empty = true;
-            $contents = [];
-            if ($contentTexts = $request->request->get('content')) {
-                foreach ($contentTexts as $order => $text) {
-                    $order = (int) $order;
-                    if ($text) {
-                        $articleText = new ArticleTexts();
-                        $articleText->setContent($text);
-                        $articleText->setSort($order);
-                        $contents[] = $articleText;
-                        $content_empty = false;
-                    }
-                }
-            }
+            $em->persist($article);
+            $em->flush();
 
-            if ($contentFiles = $request->files->get('content')) {
-                foreach ($contentFiles as $order => $file) {
-                    $order = (int) $order;
-                    if ($file) {
-                        $articleFile = new ArticleFiles();
-
-                        $articleFile->setFile($file);
-                        $articleFile->setSort($order);
-                        $contents[] = $articleFile;
-                        $content_empty = false;
-                    }
-                }
-            }
-
-            if (!$content_empty) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($article);
-                $em->flush();
-
-                $articleId = $article->getId();
-
-                foreach ($contents as $content) {
-                    $content->setArticleId($articleId);
-                    $content->setArticle($article);
-                    if (get_class($content) == 'BlogBundle\Entity\ArticleFiles') {
-                        $content->upload();
-                    }
-                    $em->persist($content);
-                    $em->flush();
-                }
-
-                return $this->redirect($this->generateUrl('BlogBundle_show', array(
-                    'id' => $article->getId()))
-                );
-            } else {
-
-            }
+            return $this->redirect($this->generateUrl('BlogBundle_show', ['id' => $article->getId()]));
         }
 
-        return $this->redirect($this->generateUrl('BlogBundle_new'));
+        return $this->render('BlogBundle::forms/article.html.twig', array(
+            'article' => $article,
+            'form' => $form->createView()
+        ));
     }
 
 }

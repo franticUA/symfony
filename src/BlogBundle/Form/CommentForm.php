@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class CommentsForm extends AbstractType
+class CommentForm extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -21,7 +21,7 @@ class CommentsForm extends AbstractType
         $builder
             ->add('parentId', HiddenType::class, array('attr' => array('class' => 'form-control', 'id' => false)))
             ->add('content', TextareaType::class, array('label' => false,
-                'attr' => array('id' => 'false', 'class' => 'form-control')))
+                    'attr' => array('class' => 'for1m-control', 'id' => false)))
             ->add('add', SubmitType::class, array('label' => 'Add', 'attr' => array('class' => 'btn')))
         ;
     }
@@ -33,7 +33,7 @@ class CommentsForm extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'BlogBundle\Entity\Comments',
-            'csrf_protection' => false,
+            'csrf_protection' => false
         ));
     }
 }

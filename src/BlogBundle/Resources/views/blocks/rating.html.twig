@@ -3,7 +3,7 @@
    data-method="post"
    data-action="{{ userLike ? 'unlike' : 'like'}}">
     <i class="glyphicon glyphicon-thumbs-up"></i>
-</a><span>{{ article.rating }}</span>
+</a><span>{{ rating }}</span>
 <a class="like-button" href="{{ path(route, {'id': article.id}) }}"
    data-ajax
    data-method="post"

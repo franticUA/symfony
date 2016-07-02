@@ -1,7 +1,7 @@
 {% extends 'BlogBundle::pages/new.html.twig' %}
 {% block form %}
 
-    {{ form_start(form, { 'action': path('BlogBundle_create'), 'method': 'POST', 'attr': {'class': 'blogger'}, 'multipart': true }) }}
+    {{ form_start(form, { 'action': path('API_article_create'), 'method': 'POST', 'attr': {'class': 'blogger'}, 'multipart': true }) }}
 
     {{ form_errors(form) }}
 
@@ -11,24 +11,64 @@
         {{ form_widget(form.title) }}
     </div>
 
-    <div class="form-group">
-        <label for="textarea0"></label>
-        <textarea class="form-control" rows="3" name="content[1]" id="textarea0"></textarea>
+    <div class="content" data-textform="{{ form_widget(form.contentTexts.vars.prototype)|e('html_attr') }}"
+                         data-fileform="{{ form_widget(form.contentFiles.vars.prototype)|e('html_attr') }}"
+    >
+        <div class="attaches">
+            {% for text in form.contentTexts %}
+                <div class="form-group">
+                    {{ form_label(text.content) }}
+                    {{ form_errors(text.content) }}
+                    {{ form_widget(text.content) }}
+                    {{ form_widget(text.sort) }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="add-btns-wrap">
+            <a href="#" class="btn add-form btn-info" data-type="textform">Add text</a>
+            <a href="#" class="btn add-form btn-info" data-type="fileform">Add file</a>
+        </div>
     </div>
-
-    <div class="form-group">
-        <input type="file" name="content[2]">
-    </div>
-
-    <div class="form-group">
-        <label for="textarea2"></label>
-        <textarea class="form-control" rows="3" name="content[3]" id="textarea2"></textarea>
-    </div>
-
-
-    {{ form_widget(form) }}
 
     {{ form_end(form) }}
 
+{% endblock %}
+{% block js %}
+    {{ parent() }}
+<script>
+function addForm($collectionHolder, type) {
+    var prototype = $collectionHolder.data(type);
 
+    var index = $collectionHolder.data('index');
+
+    var newForm = prototype.replace(/__name__/g, index);
+    var $newFormDiv = $('<div></div>').append(newForm);
+
+    addTagFormDeleteLink($newFormDiv);
+
+    $newFormDiv.find('input[type="hidden"].sort-'+(index)).val(index);
+    $('.attaches').append($newFormDiv);
+
+    $collectionHolder.data('index', index + 1);
+}
+function addTagFormDeleteLink($contentForm) {
+    var $removeFormA = $('<a class="pull-right btn btn-xs btn-warning" href="#">delete</a>');
+    $contentForm.append($removeFormA);
+
+    $removeFormA.on('click', function(e) {
+        e.preventDefault();
+        $contentForm.remove();
+    });
+}
+$(document).ready(function () {
+    var $collectionHolder = $('div.content');
+    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+    $('.add-form').on('click', function(e) {
+        e.preventDefault();
+
+        addForm($collectionHolder, $(this).data('type'));
+    });
+});
+</script>
 {% endblock %}

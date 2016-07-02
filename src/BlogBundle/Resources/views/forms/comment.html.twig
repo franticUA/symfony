@@ -1,13 +1,10 @@
-{{ form_start(form, { 'action': path('BlogBundle_comment_create' , { 'id' : comment.articleId }), 'method': 'POST', 'attr': {'class': 'blogger'} }) }}
+{{ form_start(form, { 'action': path('API_comment_create' , { 'id' : comment.articleId }), 'method': 'POST', 'attr': {'class': 'blogger'} }) }}
 
     {{ form_errors(form) }}
 
     <div class="form-group">
-        {{ form_label(form.content) }}
-        {{ form_errors(form.content) }}
-        {{ form_widget(form.content) }}
+        {{ form_widget(form.content, {'id': 'comment-content-_default_'}) }}
     </div>
-
-    {{ form_widget(form) }}
+    {{ form_widget(form.parentId, {'id': 'comment-parent-id-_default_'}) }}
 
 {{ form_end(form) }}

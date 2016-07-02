@@ -1,16 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: user
- * Date: 17.06.2016
- * Time: 19:27
- */
 
 namespace BlogBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -26,6 +20,10 @@ class ArticleForm extends AbstractType
     {
         $builder
             ->add('title', TextType::class, array('attr' => array('class' => 'form-control')))
+            ->add('contentTexts', CollectionType::class, array('entry_type' => ArticleTextForm::class,
+                'allow_add' => true, 'by_reference' => false, 'label' => false, 'allow_delete' => true, 'prototype' => true))
+            ->add('contentFiles', CollectionType::class, array('entry_type' => ArticleFileForm::class, 'error_bubbling'=>true,
+                'allow_add' => true, 'by_reference' => false, 'label' => false, 'allow_delete' => true, 'prototype' => true))
             ->add('add', SubmitType::class, array('label' => 'Add', 'attr' => array('class' => 'btn')))
         ;
     }

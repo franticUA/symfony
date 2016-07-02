@@ -4,7 +4,17 @@
                  data-module="widgets.Article"
                  data-id="{{ article.id }}">
             <h3><a href="{{ path('BlogBundle_show', { 'id': article.id }) }}">{{ article.title }}</a></h3>
-            <div class="article-content">{{ article.content|raw }}</div>
+            <div class="article-content">
+                {% for content in article.content %}
+                    {% if content.type == 'img' %}
+                        <div class="">
+                            <img src="{{ content.val }}">
+                        </div>
+                    {% else %}
+                        {{ content.val }}
+                    {% endif %}
+                {% endfor %}
+            </div>
             <div class="article-description">
                 <div class="article-rating">
                     {% include 'BlogBundle:blocks:rating.html.twig' with {'route': 'API_article', 'id': article.id, 'userLike': article.userLike, 'rating': article.rating} %}
@@ -16,7 +26,9 @@
                     </a>
                 </div>
             </div>
-            <a href="{{ path('BlogBundle_show', { 'id': article.id }) }}#comments">комментарии</a>
+            <a href="{{ path('BlogBundle_show', { 'id': article.id }) }}#comments" class="btn btn-xs btn-info">
+                комментарии ({{ article.comments|length }})
+            </a>
         </article>
     {% else %}
         <p>There are no blog entries</p>

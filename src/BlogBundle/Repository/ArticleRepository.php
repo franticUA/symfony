@@ -15,35 +15,18 @@ class ArticleRepository extends \Doctrine\ORM\EntityRepository
     function findOneWithUserLike($id, $userId)
     {
         $qb = $this->createQueryBuilder('a')
-            ->select(['a', 'l', 't', 'f'])
+            ->select(['a', 'l', 't', 'f', 'c', 'cl'])
             ->where('a.id=:id')
             ->leftJoin('a.likes', 'l', 'WITH', 'l.userId=:userId')
             ->leftJoin('a.contentTexts', 't')
             ->leftJoin('a.contentFiles', 'f')
+            ->leftJoin('a.comments', 'c')
+            ->leftJoin('c.likes', 'cl')
             ->setParameters(['id'=>$id, 'userId' => $userId]);
 
         $res = $qb->getQuery()
             ->getOneOrNullResult();
 
         return $res;
-    }
-
-    function paginationList($userId, $limit, $offset, $authorId = false)
-    {
-        $query = $this->createQueryBuilder('b')
-            ->select(['b', 'l', 't', 'f'])
-            ->leftJoin('b.likes', 'l', 'WITH', 'b.id=l.articleId AND l.userId=:userId')
-            ->leftJoin('b.contentTexts', 't')
-            ->leftJoin('b.contentFiles', 'f')
-            ->setParameter('userId', $userId)
-            ->addOrderBy('b.id', 'DESC')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
-
-        /*if ($authorId) {
-            $query->where('b.userId = :authorID');
-        }*/
-
-        return new Paginator($query, $fetchJoinCollection = true);
     }
 }
